@@ -1,11 +1,26 @@
 {
     "name": "bsodergren/utm",
     "description": "Private Packages for my code.",
-    "autoload": {
-        "psr-4": {
-            "bsodergren\\utm\\": "src/"
-        }
+    "type": "library",
+    "license": "GPL-2.0-only",
+    "require": {
+        "php": ">=8.0"
     },
+    "authors": [
+        {
+            "name": "Bjorn Sodergren",
+            // "homepage": "",
+            "role": "Original Author"
+        }
+    ],
+	"autoload": {
+		"classmap": ["src/"]
+	},
+    "extra": {
+		"branch-alias": {
+			"dev-main": "dev-master"
+		}
+	}
     "minimum-stability": "dev",
     "prefer-stable": false
 }
