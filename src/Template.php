@@ -8,7 +8,11 @@ class Template
 	
 	public function __constuctor()
 	{
-		    echo "My name is " , get_class($this) , "\n"; 
+	
+	}
+	
+	public function display()
+		echo "My name is " , get_class($this) , "\n"; 
 	}
 
 }
