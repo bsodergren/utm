@@ -15,11 +15,7 @@
 	"autoload": {
 		"classmap": ["src/"]
 	},
-    "extra": {
-		"branch-alias": {
-			"dev-main": "dev-master"
-		}
-	}
+   
     "minimum-stability": "dev",
     "prefer-stable": false
 }
