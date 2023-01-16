@@ -1,7 +1,6 @@
 <?php
 namespace Bsodergren\utm;
 
-use bsodergren;
 
 class html  
 {
