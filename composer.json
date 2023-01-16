@@ -1,0 +1,11 @@
+{
+    "name": "bsodergren/utm",
+    "description": "Private Packages for my code.",
+    "autoload": {
+        "psr-4": {
+            "bsodergren\\utm\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
