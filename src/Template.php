@@ -10,8 +10,9 @@ class Template
 	{
 	
 	}
-	
-	public function display()
+
+	public function display(){
+		
 		echo "My name is " , get_class($this) , "\n"; 
 	}
 
