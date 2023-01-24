@@ -13,22 +13,25 @@ class Template
     public $default_params = [];
     public $template;
     private $test = 0;
+    private $TemplateLoc = '';
 
-
-    public function __construct()
+    static protected $StaticTemplateLoc = '';
+    public function __construct($template_directory)
     {
+        $this->TemplateLoc = $template_directory;
+        self::$StaticTemplateLoc = $template_directory;
     }
 
     public static function GetHTML($template = '', $array = [])
     {
-        $template_obj = new Template();
+        $template_obj = new Template(self::$StaticTemplateLoc);
         $template_obj->template($template, $array);
         return $template_obj->html;
     }
 
     public static function echo($template = '', $array = [])
     {
-        $template_obj = new Template();
+        $template_obj = new Template(self::$StaticTemplateLoc);
         $template_obj->template($template, $array);
         echo $template_obj->html;
     }
@@ -71,7 +74,7 @@ class Template
     {
         $template = str_replace(".html", "", $template);
 
-        $template_file = __TEMPLATE_DIR__ . "/" . $template . ".html";
+        $template_file = $this->TemplateLoc . "/" . $template . ".html";
 
         if (!file_exists($template_file)) {
             //use default template directory
@@ -91,7 +94,7 @@ class Template
         $params = [];
 
         foreach ($output_array[1] as $n => $def) {
-            if (MediaSettings::isSet($def)) {
+            if (Utils::isSet($def)) {
                 $params[$def] = constant($def);
             }
         }
@@ -134,14 +137,13 @@ class Template
     }
 }
 
-class MediaError extends Template
+class utmError extends Template
 {
 
     public static function msg($severity, $msg = "", $refresh = 5)
     {
-        $url = "/index.php";
         $timeout = $refresh;
-
+        $url = "";
         if(is_array($refresh))
         {
             $timeout = 0;
@@ -157,7 +159,7 @@ class MediaError extends Template
         }
 
         if ($msg != '') {
-            include_once __LAYOUT_HEADER__;
+           // include_once __LAYOUT_HEADER__;
             Template::echo("error/" . $severity, ['MSG' => $msg]);
         }
 
@@ -168,78 +170,38 @@ class MediaError extends Template
 
 
 
+
 class Header extends Template
 {
 
-    public static function display($template = "", $params = [])
+    public static function display($params = [])
     {
-
-        $path = "/" . __SCRIPT_NAME__;
-        if (MediaSettings::isTrue('__FORM_POST__')) {
-            $path = "/" . __FORM_POST__;
-        }
-
-            if (file_exists(__TEMPLATE_DIR__ . $path . "/javascript.html")) {
-                define('__CUSTOM_JS__', Template::GetHTML($path . "/javascript"));
-            }
-
-            if (file_exists(__TEMPLATE_DIR__ . $path . "/onload.html")) {
-                define('__ONLOAD__', Template::GetHTML($path . "/onload"));
-            }
-        if (!MediaSettings::isTrue('NO_NAV')) {
-            $params['__NAVBAR__'] = Navbar::Display();
-        }
-
-        $templateObj = new template();
-        echo $templateObj->template("base/header/header", $params);
+        echo parent::GetHTML("/header/header", $params);
     }
 }
+
 
 class Footer extends Template
 {
     //public $html;
 
-    public static function display($template = '', $params = [])
+    public static function display( $params = [])
     {
-        $templateObj = new template();
-        if (MediaSettings::isTrue('__SHOW_DEBUG_PANEL__')) {
-            $errorArray = getErrorLogs();
-            $debug_nav_link_html = '';
-
-            foreach ($errorArray as $k => $file) {
-                $file = basename($file);
-                $key = str_replace(".", "_", basename($file));
-                $debug_nav_links = [
-                    'DEBUG_NAV_LINK_URL' => 'debug.php?log=' . $key . '',
-                    'DEBUG_NAV_LINK_FILE' => $file
-                ];
-                $debug_nav_link_html .= $templateObj->template("base/footer/nav_item_link", $debug_nav_links);
-            }
-            $debug_panel_params['DEBUG_FILE_LIST'] = $debug_nav_link_html;
-
-            $params['DEBUG_PANEL_HTML'] = $templateObj->template("base/footer/debug_panel", $debug_panel_params);
-        }
-
-        echo $templateObj->template("base/footer/footer", $params);
+      
+        echo parent::GetHTML("/footer/footer", $params);
     }
 }
+
+
 
 class Navbar extends Template
 {
 
-    public static function display($template = '', $params = [])
+    public static function display($params = [])
     {
-        $templateObj = new template();
+       
+//        $params['NAVBAR_MENU_HTML'] = $navbar_menu_html;
 
-        $nav_link_html = '';
-
-        $nav_links_array = json_decode(__NAVBAR_LINKS__);
-        foreach ($nav_links_array as $text =>  $url) {
-            $nav_link_html .= $templateObj->template("base/navbar/navbar_item_link", ['NAV_LINK_URL' => $url, 'NAV_LINK_TEXT' => $text]);
-        }
-
-        $params['NAV_BAR_LINKS'] = $nav_link_html;
-
-        return $templateObj->template("base/navbar/navbar", $params);
+        echo parent::GetHTML("/navbar/navbar", $params);
     }
 }
