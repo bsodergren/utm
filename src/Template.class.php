@@ -239,7 +239,7 @@ class Navbar extends Template
             }            
         
 
-        $params['NAVBAR_MENU_HTML'] = parent::GetHTML("base/navbar/dropdown/navbar_menu", [
+        $params['NAVBAR_MENU_HTML'] = parent::GetHTML("/navbar/dropdown/navbar_menu", [
             'NAV_BAR_LINKS' => $nav_link_html,
             'DROPDOWN_LINKS' => $dropdown_link_html,
             'DROPDOWN_TEXT' => $dropddown_menu_text,
