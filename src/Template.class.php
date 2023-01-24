@@ -5,6 +5,7 @@ namespace Bsodergren\utm;
 
 use Bsodergren\utm\Utilities;
 use Bsodergren\utm\HTML;
+use PDO;
 
 class Template
 {
@@ -199,11 +200,29 @@ class Footer extends Template
 class Navbar extends Template
 {
 
+    public static $nav_menu_bar = [] ;
+    public static $nav_dropdown_list = [];
     public static function display($params = [])
     {
        
-//        $params['NAVBAR_MENU_HTML'] = $navbar_menu_html;
+        if(count(self::$nav_dropdown_list) > 1)
+        {
+            foreach (self::$nav_dropdown_list as $dropdown_text => $link_array) {
+                var_dump($dropdown_text);
+                var_dump($link_array);
+            }            
+        }
 
         echo parent::GetHTML("/navbar/navbar", $params);
+    }
+
+
+    public static function addMenuLink($text,$url,$dropdown='')
+    {
+        if($dropdown == ''){
+            self::$nav_menu_bar[$text] = $url;
+        } else {
+            self::$nav_dropdown_list[$dropdown][$text] = $url;
+        }
     }
 }
