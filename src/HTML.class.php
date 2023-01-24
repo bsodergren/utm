@@ -3,6 +3,7 @@
 namespace Bsodergren\utm;
 //use Nette\Utils\FileSystem;
 //use Nette\Utils\DateTime;
+use Bsodergren\utm\Template;
 
 class HTML
 {
@@ -35,37 +36,6 @@ class HTML
         ob_flush();
     }
 
-
-
-    public function draw_checkbox($name, $value, $text = 'Face Trim')
-    {
-        global $pub_keywords;
-
-        $checked = "";
-
-
-        $current_value = $value;
-
-
-        if ($current_value == 1) {
-            $checked = "checked";
-        }
-
-        $html = '';
-        $html .= '<input type="checkbox" name="' . $name . '" value="1" ' . $checked . '>' . $text;
-        return $html;
-    }
-
-    public function draw_radio($name, $value)
-    {
-        $html = '';
-
-        foreach ($value as $option) {
-            $html .= '<input type="radio" class="' . $option["class"] . '" name="' . $name . '" value="' . $option["value"] . '" ' . $option['checked'] . '>' . $option['text'] . '&nbsp;';
-        }
-        // $html = $html . "<br>"."\n";
-        return $html;
-    }
 
     
 }

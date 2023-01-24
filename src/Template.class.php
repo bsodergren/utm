@@ -3,6 +3,8 @@
 
 namespace Bsodergren\utm;
 
+use Bsodergren\utm\Utilities;
+use Bsodergren\utm\HTML;
 
 class Template
 {
@@ -94,7 +96,7 @@ class Template
         $params = [];
 
         foreach ($output_array[1] as $n => $def) {
-            if (Utils::isSet($def)) {
+            if (Utilities::isSet($def)) {
                 $params[$def] = constant($def);
             }
         }
@@ -163,7 +165,7 @@ class utmError extends Template
             Template::echo("error/" . $severity, ['MSG' => $msg]);
         }
 
-        htmldisplay::javaRefresh($url,$timeout);
+        HTML::javaRefresh($url,$timeout);
         exit;
     }
 }
