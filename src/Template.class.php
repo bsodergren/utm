@@ -224,5 +224,8 @@ class Navbar extends Template
         } else {
             self::$nav_dropdown_list[$dropdown][$text] = $url;
         }
+
+        var_dump($nav_dropdown_list);
+        var_dump($nav_menu_bar);
     }
 }
