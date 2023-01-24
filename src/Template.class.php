@@ -200,18 +200,50 @@ class Footer extends Template
 class Navbar extends Template
 {
 
+    
+
+ //   public $dropdown_link_html = '';
+//    public $dropdown_link_html = '';
+
+
+
     public static $nav_menu_bar = [] ;
     public static $nav_dropdown_list = [];
     public static function display($params = [])
     {
-       
-        if(count(self::$nav_dropdown_list) > 1)
-        {
-            foreach (self::$nav_dropdown_list as $dropdown_text => $link_array) {
-                var_dump($dropdown_text);
-                var_dump($link_array);
+        $dropdown_link_html = '';
+        $nav_link_html = '';
+        $dropddown_menu_text = '';
+
+            foreach (self::$nav_menu_bar as $dropdown_text => $link_array) {
+
+                if (is_array($link_array)) {
+                    $dropddown_menu_text = $dropdown_text;
+
+                    foreach ($link_array as $dropdown_text => $dropdown_url) {
+                        $dropdown_link_html .= parent::GetHTML(
+                            "/navbar/dropdown/navbar_link",
+                            [
+                                'DROPDOWN_URL' => $dropdown_url,
+                                'DROPDOWN_URL_TEXT' => $dropdown_text
+                            ]
+                        );
+                    }
+                    continue;
+                }
+
+                $nav_link_html .= parent::GetHTML("/navbar/navbar_item_link",
+                 ['NAV_LINK_URL' => $dropdown_text, 'NAV_LINK_TEXT' => $link_array]);
+
+
             }            
-        }
+        
+
+        $params['NAVBAR_MENU_HTML'] = parent::GetHTML("base/navbar/dropdown/navbar_menu", [
+            'NAV_BAR_LINKS' => $nav_link_html,
+            'DROPDOWN_LINKS' => $dropdown_link_html,
+            'DROPDOWN_TEXT' => $dropddown_menu_text,
+        ]);
 
         echo parent::GetHTML("/navbar/navbar", $params);
     }
@@ -222,10 +254,10 @@ class Navbar extends Template
         if($dropdown == ''){
             self::$nav_menu_bar[$text] = $url;
         } else {
-            self::$nav_dropdown_list[$dropdown][$text] = $url;
+            self::$nav_menu_bar[$dropdown][$text] = $url;
         }
 
-        var_dump($nav_dropdown_list);
-        var_dump($nav_menu_bar);
+        
+
     }
 }
