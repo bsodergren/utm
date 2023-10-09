@@ -1,0 +1,11 @@
+<div class="alert alert-primary alert-dismissible fade show w-50 m-auto fs-3 text-center rounded-pill" role="alert"
+    id="alert">
+    %%MSG%%
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<script>
+    $(".alert").delay(4000).slideUp(200, function () {
+        $(this).alert('close');
+    });
+</script>

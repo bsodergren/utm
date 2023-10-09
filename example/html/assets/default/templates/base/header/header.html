@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="description" content="%%APP_DESCRIPTION%%">
+    <meta name="author" content="%%APP_OWNER%%">
+    <title>%%APP_NAME%% | %%TITLE%%</title>
+
+    <link rel="icon" type="image/png" href="%%FAV_ICON%%">
+    <!-- Custom styles -->
+
+    {{bootstrap_5}}
+
+    %%DEFAULT_CSS%%
+    %%CSS_SRC%%
+    %%JS_SRC%%
+
+
+    %%CUSTOM_CSS%%
+    %%__CUSTOM_JS__%%
+
+</head>
+
+<body %%__ONLOAD__%%>
+
+    %%__NAVBAR__%%
+
+    {{return_msg,MSG=|%%__MSG__%%|}}
+
+<main role="main" class="container mt-1">
+
+    <!-- end of header.php -->

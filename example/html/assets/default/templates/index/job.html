@@ -1,0 +1,27 @@
+<tr class="fs-5">
+    <td>
+        %%FORM_OPEN_HTML%%
+        <div class="row" id="hide_%%JOB_ID%%" onclick="return clickButton(this.id);">
+            <div class="col text-nowrap">Job Number: <span id="job_number"
+                    name="jobNumber_%%JOB_ID%%">%%TEXT_JOB%%</span>
+                <p id="p6"></p>
+            </div>
+            <div class="col text-nowrap text-md">
+                <span class="text-white rounded-pill bg-success px-4"
+                %%TEXT_CLOSE_URL%%
+                >%%TEXT_CLOSE%%</span>
+            </div>
+            <div class="col text-end">%%NUM_OF_FORMS%%</div>
+        </div>
+
+
+        <div class="%%HIDDEN_CLASS%%" id="model_%%JOB_ID%%">
+            <div class="row mb-2">
+                <div class="container btn-group btn-group-lg" role="group">
+                    %%FORM_BUTTONS_HTML%%
+                </div>
+            </div>
+        </div>
+        %%FORM_CLOSE%%
+    </td>
+</tr>

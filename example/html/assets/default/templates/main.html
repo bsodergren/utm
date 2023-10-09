@@ -1,0 +1,46 @@
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th class="fs-3">Media</th>
+        </tr>
+    </thead>
+    <tbody>
+        %%MEDIA_JOB_ROW%%
+    </tbody>
+</table>
+<script type="text/javascript">
+    function clickButton(id) {
+        console.log(id);
+        var divArr = id.split("_");
+
+        let row_id = "model_" + divArr[1];
+
+        var divClass = document.getElementById(row_id).className;
+        console.log(divClass);
+
+
+        if (divClass == "collapse") {
+            document.getElementById(row_id).className = "collapse.show";
+
+        } else {
+            document.getElementById(row_id).className = "collapse";
+        }
+
+        $.ajax({
+            type: "post",
+            url: "process.php",
+            data:
+            {
+                'divClass': divClass,
+                'row_id': row_id
+            },
+            cache: false,
+            success: function () {
+
+            }
+        });
+
+
+        return false;
+    }
+</script>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bsodergren\utm;
+namespace UTM\Utils;
 
 class Utilities
 {
