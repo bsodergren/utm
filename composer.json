@@ -5,6 +5,8 @@
     "license": "GPL-2.0-only",
     "require": {
         "php": ">=8.0",
+        "symfony/monolog-bundle": "^3.8",
+
         "symfony/var-dumper": "7.0.x-dev"
     },
     "authors": [
