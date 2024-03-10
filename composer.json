@@ -17,7 +17,6 @@
         }
     ],
 	"autoload": {
-        "files": [ "src/Resources/dump.php" ],
         "psr-4": {
 
             "UTM\\": "src/"
