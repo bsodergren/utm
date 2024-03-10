@@ -16,7 +16,9 @@
         }
     ],
 	"autoload": {
+        "files": [ "Resources/dump.php" ],
         "psr-4": {
+
             "UTM\\": "src/"
         },
 		"classmap": ["src/"]
