@@ -3,9 +3,11 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Bundle\Monolog;
+namespace UTM\Bundle\Monolog;
 
 /**
  * ServiceActivatorLogger.
  */
-class ServiceActivatorLogger extends MediaLog {}
+class ServiceActivatorLogger extends UTMLog
+{
+}

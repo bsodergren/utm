@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Bundle\Monolog;
+namespace UTM\Bundle\Monolog;
 
 class ServiceActivatorProcessor
 {

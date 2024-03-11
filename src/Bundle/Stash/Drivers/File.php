@@ -3,11 +3,11 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Bundle\Stash\Drivers;
+namespace UTM\Bundle\Stash\Drivers;
 
-use Mediatag\Bundle\Stash\Exceptions\FileNotFoundException;
-use Mediatag\Bundle\Stash\Interfaces\Cacheable;
-use Mediatag\Bundle\Stash\Item;
+use UTM\Bundle\Stash\Exceptions\FileNotFoundException;
+use UTM\Bundle\Stash\Interfaces\Cacheable;
+use UTM\Bundle\Stash\Item;
 
 class File implements Cacheable
 {

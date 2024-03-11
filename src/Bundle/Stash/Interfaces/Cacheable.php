@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Bundle\Stash\Interfaces;
+namespace UTM\Bundle\Stash\Interfaces;
 
 interface Cacheable
 {

@@ -5,7 +5,9 @@
     "license": "GPL-2.0-only",
     "require": {
         "php": ">=8.0",
-        "symfony/monolog-bundle": "^3.8"
+        "symfony/monolog-bundle": "^3.8",
+        "symfony/console": "^6.3",
+        "nesbot/carbon": "^2.71"
         },
         "require-dev": {
             "symfony/var-dumper": "^6.4|^7.0"

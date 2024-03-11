@@ -3,16 +3,16 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Utilities\Debug;
+namespace UTM\Utils\Debug;
 
-use Mediatag\Bundle\Monolog\MediaLog;
-use Mediatag\Utilities\Option;
+use UTM\Bundle\Monolog\MediaLog;
+use UTM\Utilities\Option;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class MediaStopWatch
+class UtmStopWatch
 {
     public static $clock = false;
 

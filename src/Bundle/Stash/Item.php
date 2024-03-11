@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Bundle\Stash;
+namespace UTM\Bundle\Stash;
 
 use Carbon\Carbon;
 

@@ -27,7 +27,7 @@ use Monolog\Utils;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Christophe Coevoet <stof@notk.org>
  */
-class MediaLineFormatter extends LineFormatter
+class UtmLineFormatter extends LineFormatter
 {
     public bool $allowInlineLineBreaks;
 

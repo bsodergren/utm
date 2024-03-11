@@ -3,9 +3,9 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Bundle\Stash;
+namespace UTM\Bundle\Stash;
 
-use Mediatag\Bundle\Stash\Exceptions\InvalidDriverException;
+use UTM\Bundle\Stash\Exceptions\InvalidDriverException;
 
 class Cache
 {

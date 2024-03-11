@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Bundle\mysql;
+namespace UTM\Bundle\mysql;
 
 /**
  * MysqliDb Class.
