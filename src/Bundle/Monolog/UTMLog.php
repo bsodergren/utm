@@ -5,12 +5,12 @@
 
 namespace UTM\Bundle\Monolog;
 
-use UTM\Utils\Debug\Debug;
-use UTM\Utils\Debug\Timer;
 use Monolog\ErrorHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use UTM\Utils\Debug\Debug;
+use UTM\Utils\Debug\Timer;
 
 class UTMLog
 {
@@ -46,7 +46,7 @@ class UTMLog
         // $this->processor = new PsrLogMessageProcessor();
         // $LogFormat = ["%message% %context%\n",null,true];
         $LogFormat = ["[%datetime%][%level_name%] %message% %context%\n", 'g:i:s.v', true];
-        $format = new MediaLineFormatter(...$LogFormat);
+        $format = new UtmLineFormatter(...$LogFormat);
         $this->logger = new Logger($channel);
 
         //        ErrorHandler::register($this->logger);
