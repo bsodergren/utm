@@ -3,11 +3,11 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Utilities\Debug;
+namespace UTM\Utils\Debug;
 
-use Mediatag\Bundle\Monolog\MediaLog;
+use UTM\Utils\Debug\UtmStopWatch;
 
-class Timer extends MediaStopWatch
+class Timer extends UtmStopWatch
 {
     public static $logProc = false;
 
