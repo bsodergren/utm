@@ -5,6 +5,7 @@
 
 namespace UTM\Utils\Debug;
 
+use UTM\Bundle\Monolog\UTMLog;
 
 class Debug 
 {
@@ -179,7 +180,7 @@ class Debug
             $text = substr($text, 0, self::$padding[$type]);
             $text = str_pad($text, self::$padding[$type], ' ');
 
-            return MediaLog::formatPrint($text, self::$color[$type]);
+            return UTMLog::formatPrint($text, self::$color[$type]);
         }
 
         return null;

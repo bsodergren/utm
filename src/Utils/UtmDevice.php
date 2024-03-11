@@ -1,7 +1,4 @@
 <?php
-/**
- * CWP Media tool for load flags
- */
 
 namespace UTM\Utils;
 
@@ -25,25 +22,6 @@ class UtmDevice
         $os = new Os();
         $browser = new Browser();
 
-        /*
-         *  windows desktop
-         * Edge
-         * Windows
-         * unknown
-         *
-         * Media App
-         * Chrome
-         * Windows
-         * Unknown
-         *
-         *
-         * iPhone
-         * Edge
-         * iOS
-         * iPhone
-         *
-         *
-         */
 
         if ('Edge' == $browser->getName()) {
             if ('Windows' == $os->getName()) {

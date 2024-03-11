@@ -1,7 +1,4 @@
 <?php
-/**
- * Bsodergren\utm Media tool for load flags
- */
 
 namespace UTM\Template\Theme;
 use UTM\Utils\UtmDevice;

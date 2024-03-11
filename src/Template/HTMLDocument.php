@@ -1,7 +1,4 @@
 <?php
-/**
- * CWP Media tool for load flags
- */
 
 namespace UTM\Template;
 use UTM\Utils\UtmDevice;

@@ -1,13 +1,8 @@
 <?php
-/**
- * Bsodergren\utm Media tool for load flags
- */
 
 namespace UTM\Browser;
 
-/**
- * Browser Detection.
- */
+
 class Browser
 {
     public const UNKNOWN = 'unknown';

@@ -12,7 +12,6 @@ class Utilities
 
 
             if (constant($define_name) == true) {
-                //  MediaUpdate::echo(constant($define_name));
                 return 1;
             }
         }

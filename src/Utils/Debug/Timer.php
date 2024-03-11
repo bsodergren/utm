@@ -6,6 +6,7 @@
 namespace UTM\Utils\Debug;
 
 use UTM\Utils\Debug\UtmStopWatch;
+use UTM\Bundle\Monolog\UTMLog;
 
 class Timer extends UtmStopWatch
 {
@@ -27,7 +28,7 @@ class Timer extends UtmStopWatch
         $caller = Debug::CallingFunctionName();
 
         $text = str_pad($text, 18, ' ');
-        $text = MediaLog::formatPrint($text, ['blue']);
+        $text = UtmLog::formatPrint($text, ['blue']);
         $logText = $caller.'::'.$text;
         parent::dump($logText, $var);
     }
@@ -35,14 +36,14 @@ class Timer extends UtmStopWatch
     public static function startLap($text = 'lap', $_ = '')
     {
         $caller = Debug::CallingFunctionName();
-        $text = trim(MediaLog::formatPrint($text, ['blue']));
+        $text = trim(UtmLog::formatPrint($text, ['blue']));
         $logText = $caller.'::'.$text;
         parent::lap($logText, null);
     }
 
     public static function watchlap($text = 'lap', $var = null)
     {
-        $text = trim(MediaLog::formatPrint($text, ['cyan']));
+        $text = trim(UtmLog::formatPrint($text, ['cyan']));
         $logText = "\t".$text;
         parent::lap($logText, $var);
     }

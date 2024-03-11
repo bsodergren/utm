@@ -5,12 +5,12 @@
 
 namespace UTM\Utils\Debug;
 
-use UTM\Bundle\Monolog\MediaLog;
-use UTM\Utilities\Option;
+use UTM\Utils\Option;
+use UTM\Bundle\Monolog\UTMLog;
+use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 class UtmStopWatch
 {
@@ -53,7 +53,7 @@ class UtmStopWatch
 
         if (Option::isTrue('time')) {
             $file = self::$timerLog;
-            $string = MediaLog::formatPrint(implode(' ', $_SERVER['argv']), ['green', 'italic']).\PHP_EOL;
+            $string = UtmLog::formatPrint(implode(' ', $_SERVER['argv']), ['green', 'italic']).\PHP_EOL;
             file_put_contents($file, $string);
             self::$io = new SymfonyStyle($input, $output);
             self::$stopwatch = new StopWatch();

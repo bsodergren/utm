@@ -7,6 +7,8 @@
         "php": ">=8.0",
         "symfony/monolog-bundle": "^3.8",
         "symfony/console": "^6.3",
+        "symfony/stopwatch": "^6.2",
+
         "nesbot/carbon": "^2.71"
         },
         "require-dev": {
