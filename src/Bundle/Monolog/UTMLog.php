@@ -9,8 +9,8 @@ use Monolog\ErrorHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
-use UTM\Utils\Debug\Debug;
-use UTM\Utils\Debug\Timer;
+use UTM\Utilities\Debug\Debug;
+use UTM\Utilities\Debug\Timer;
 
 class UTMLog
 {

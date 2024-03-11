@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace UTM\Utils;
+namespace UTM\Utilities;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

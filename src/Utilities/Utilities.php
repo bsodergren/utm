@@ -1,6 +1,6 @@
 <?php
 
-namespace UTM\Utils;
+namespace UTM\Utilities;
 
 class Utilities
 {

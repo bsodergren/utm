@@ -3,9 +3,9 @@
  * Command like Metatag writer for video files.
  */
 
-namespace UTM\Utils\Debug;
+namespace UTM\Utilities\Debug;
 
-use UTM\Utils\Option;
+use UTM\Utilities\Option;
 use UTM\Bundle\Monolog\UTMLog;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Console\Style\SymfonyStyle;

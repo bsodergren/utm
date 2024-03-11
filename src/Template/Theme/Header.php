@@ -1,7 +1,7 @@
 <?php
 
 namespace UTM\Template\Theme;
-use UTM\Utils\UtmDevice;
+use UTM\Utilities\UtmDevice;
 use UTM\Template\Template;
 use UTM\Template\HTMLDocument;
 

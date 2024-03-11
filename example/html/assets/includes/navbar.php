@@ -1,6 +1,6 @@
 <?php 
-use UTM\Utils\Utilities;
-use UTM\Utils\UtmDevice;
+use UTM\Utilities\Utilities;
+use UTM\Utilities\UtmDevice;
 use UTM\Template\Template;
 
 

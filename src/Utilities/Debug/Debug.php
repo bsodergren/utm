@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace UTM\Utils\Debug;
+namespace UTM\Utilities\Debug;
 
 use UTM\Bundle\Monolog\UTMLog;
 

@@ -1,8 +1,8 @@
 <?php
 namespace UTM\Template;
 
-use UTM\Utils\Utilities;
-use UTM\Utils\UtmDevice;
+use UTM\Utilities\Utilities;
+use UTM\Utilities\UtmDevice;
 
 
 class Template

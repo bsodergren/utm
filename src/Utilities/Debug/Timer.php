@@ -3,9 +3,9 @@
  * Command like Metatag writer for video files.
  */
 
-namespace UTM\Utils\Debug;
+namespace UTM\Utilities\Debug;
 
-use UTM\Utils\Debug\UtmStopWatch;
+use UTM\Utilities\Debug\UtmStopWatch;
 use UTM\Bundle\Monolog\UTMLog;
 
 class Timer extends UtmStopWatch

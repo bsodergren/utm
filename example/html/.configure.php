@@ -2,7 +2,7 @@
 
 
 use UTM\Template\Template;
-use UTM\Utils\UtmDevice;
+use UTM\Utilities\UtmDevice;
 
 
 define('__PROJECT_ROOT__', dirname(__FILE__, 3));

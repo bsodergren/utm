@@ -1,7 +1,7 @@
 <?php
 
 namespace UTM\Template;
-use UTM\Utils\UtmDevice;
+use UTM\Utilities\UtmDevice;
 
 
 class HTMLDocument

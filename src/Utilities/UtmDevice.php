@@ -1,6 +1,6 @@
 <?php
 
-namespace UTM\Utils;
+namespace UTM\Utilities;
 
 use UTM\Browser\Browser;
 use UTM\Browser\Device;
