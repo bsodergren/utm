@@ -24,14 +24,21 @@ class Option extends InputOption
      */
     public static function init(InputInterface $input)
     {
-        if(self::$options === null){
-            self::$options = $input->getOptions();
+        $options = $input->getOptions();
+        if(self::$options === null) {
+            self::$options = $options;
+        } else {
+            self::$options = array_merge(self::$options, $options);
         }
+    }
+
+    public static function set($key, $value)
+    {
+        self::$options[$key] = $value;
     }
 
     public static function getOptions()
     {
-
         if (0 == \count(self::$cmdOptions)) {
             foreach (self::$options as $option => $value) {
                 if (\is_array($value)) {
@@ -55,9 +62,9 @@ class Option extends InputOption
     {
         $result = null;
         if (\array_key_exists($name, self::$options)) {
-            
+
             $value = self::$options[$name];
-            if (!\is_array($value)) {
+            if (! \is_array($value)) {
                 if (str_contains($value, ',')) {
                     $value = explode(',', $value);
                     $result = self::valueIsArray($value, $name);
@@ -128,6 +135,14 @@ class Option extends InputOption
         return null;
     }
 
+    public static function isSet($name)
+    {
+        if (\array_key_exists($name, self::$options)) {
+            return true;
+        }
+
+        return false;
+    }
     // public static function dump($loc, ...$val)
     // {
     //     if (self::isTrue('dump')) {
