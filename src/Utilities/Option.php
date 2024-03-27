@@ -1,7 +1,4 @@
 <?php
-/**
- * Command like Metatag writer for video files.
- */
 
 namespace UTM\Utilities;
 
@@ -13,7 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class Option extends InputOption
 {
-    private static $options = null;
+    private static $options;
 
     private static $cmdOptions = [];
 
@@ -24,17 +21,9 @@ class Option extends InputOption
      */
     public static function init(InputInterface $input)
     {
-        $options = $input->getOptions();
-        if(self::$options === null) {
-            self::$options = $options;
-        } else {
-            self::$options = array_merge(self::$options, $options);
+        if (null === self::$options) {
+            self::$options = $input->getOptions();
         }
-    }
-
-    public static function set($key, $value)
-    {
-        self::$options[$key] = $value;
     }
 
     public static function getOptions()
@@ -62,9 +51,8 @@ class Option extends InputOption
     {
         $result = null;
         if (\array_key_exists($name, self::$options)) {
-
             $value = self::$options[$name];
-            if (! \is_array($value)) {
+            if (!\is_array($value)) {
                 if (str_contains($value, ',')) {
                     $value = explode(',', $value);
                     $result = self::valueIsArray($value, $name);
@@ -117,8 +105,18 @@ class Option extends InputOption
         return $value;
     }
 
+    public static function isFalse($name)
+    {
+        $val = self::isTrue($name);
+
+        return !$val;
+    }
+
     public static function isTrue($name)
     {
+        if (\is_bool($name)) {
+            return $name;
+        }
         if (\array_key_exists($name, self::$options)) {
             if (\is_array(self::$options[$name])) {
                 if (\count(self::$options[$name]) > 0) {
@@ -135,14 +133,6 @@ class Option extends InputOption
         return null;
     }
 
-    public static function isSet($name)
-    {
-        if (\array_key_exists($name, self::$options)) {
-            return true;
-        }
-
-        return false;
-    }
     // public static function dump($loc, ...$val)
     // {
     //     if (self::isTrue('dump')) {
