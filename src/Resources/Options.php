@@ -11,15 +11,15 @@ use UTM\Utilities\Option;
  * file that was distributed with this source code.
  */
 
-if (!function_exists('UtmIsTrue')) {
-    function UtmIsTrue($var)
+if (!function_exists('OptionIsTrue')) {
+    function OptionIsTrue($var)
     {
         return Option::isTrue($var);
     }
 }
 
-if (!function_exists('UtmIsFalse')) {
-    function UtmIsFalse($var)
+if (!function_exists('OptionIsFalse')) {
+    function OptionIsFalse($var)
     {
         return Option::isFalse($var);
     }
