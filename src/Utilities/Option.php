@@ -114,6 +114,16 @@ class Option extends InputOption
 
     public static function isTrue($name)
     {
+        if(defined($name))
+        {
+            if (true == constant($name)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        
         if (\is_bool($name)) {
             return $name;
         }
