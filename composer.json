@@ -12,7 +12,6 @@
 
         "nesbot/carbon": "^2.71",
         "nette/utils": "^4.0@dev",
-        "symfony/yaml": "7.1.x-dev"
         },
         "require-dev": {
             "symfony/var-dumper": "^6.4|^7.0"
