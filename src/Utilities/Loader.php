@@ -5,7 +5,7 @@ namespace UTM\Utilities;
 use Camoo\Config\Config;
 use Nette\Loaders\RobotLoader;
 
-class Loeader extends RobotLoader
+class Loader extends RobotLoader
 {
     public static function loadDatabase($config, $define_pattern, $prefix_pattern, $suffix = '')
     {
