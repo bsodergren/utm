@@ -8,9 +8,11 @@
         "symfony/monolog-bundle": "^3.8",
         "symfony/console": "^6.3",
         "symfony/stopwatch": "^6.2",
+        "camoo/config": "^1.0",
 
         "nesbot/carbon": "^2.71",
-        "nette/utils": "^4.0@dev"
+        "nette/utils": "^4.0@dev",
+        "symfony/yaml": "7.1.x-dev"
         },
         "require-dev": {
             "symfony/var-dumper": "^6.4|^7.0"
