@@ -11,7 +11,7 @@
         "camoo/config": "^1.0",
 
         "nesbot/carbon": "^2.71",
-        "nette/utils": "^4.0@dev",
+        "nette/utils": "^4.0@dev"
         },
         "require-dev": {
             "symfony/var-dumper": "^6.4|^7.0"
@@ -32,6 +32,6 @@
 		"classmap": ["src/"]
 	},
    
-    "minimum-stability": "dev",
-    "prefer-stable": false
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
