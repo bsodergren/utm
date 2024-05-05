@@ -9,7 +9,8 @@
         "symfony/console": "^6.3",
         "symfony/stopwatch": "^6.2",
 
-        "nesbot/carbon": "^2.71"
+        "nesbot/carbon": "^2.71",
+        "nette/utils": "^4.0@dev"
         },
         "require-dev": {
             "symfony/var-dumper": "^6.4|^7.0"
