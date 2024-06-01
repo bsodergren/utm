@@ -28,7 +28,7 @@ class UTMLog
 
     private static $_output;
 
-    openssl_pkey_get_public static $display = true;
+    public static $display = true;
 
     protected $infostream;
 
@@ -127,7 +127,7 @@ class UTMLog
 
     public static function trace($message = '')
     {
-        self::$Logger->log(Logger::INFO, $message, debug::tracePath());
+        self::$Logger->log(Logger::INFO, $message, Debug::tracePath());
     }
 
     public static function LogStart($msg = 'Start Logging')
