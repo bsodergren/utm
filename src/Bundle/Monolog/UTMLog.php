@@ -28,7 +28,7 @@ class UTMLog
 
     private static $_output;
 
-    private static $display = true;
+    openssl_pkey_get_public static $display = true;
 
     protected $infostream;
 
