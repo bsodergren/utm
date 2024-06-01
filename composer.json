@@ -9,7 +9,6 @@
         "symfony/console": "^6.3",
         "symfony/stopwatch": "^6.2",
         "camoo/config": "^1.0",
-
         "nesbot/carbon": "^2.71",
         "nette/utils": "^4.0@dev",
         "nette/robot-loader": "^4.0",
@@ -34,6 +33,6 @@
 		"classmap": ["src/"]
 	},
    
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
