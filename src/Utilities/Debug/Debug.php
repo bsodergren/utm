@@ -29,6 +29,7 @@ class Debug
     public static function info($var)
     {
         // $calling_func = self::tracePath();
+        $class = '';
         $trace = debug_backtrace();
         $file = $trace[1]['file'];
         $line = $trace[1]['line'];
@@ -36,7 +37,10 @@ class Debug
         if (array_key_exists('2', $trace)) {
             $file = $trace[2]['file'];
             $line = $trace[2]['line'];
-            $func = '->'.$trace[2]['class'].'::'.$trace[2]['function'];
+            if (array_key_exists('class', $trace)) {
+                $class = $trace[2]['class'].'::';
+            }
+            $func = '->'.$class.$trace[2]['function'];
         }
         $root = dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
 
