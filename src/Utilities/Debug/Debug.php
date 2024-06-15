@@ -1,53 +1,51 @@
 <?php
 /**
- * Command like Metatag writer for video files.
+ *  Plexweb
  */
 
 namespace UTM\Utilities\Debug;
 
 use UTM\Bundle\Monolog\UTMLog;
 
-class Debug 
+
+class Debug
 {
-    public $traceStripPrefix = 'ore';
     public static $DebugArray = [];
 
     private static $padding = [
-        'file' => 20,
-        'class' => 22,
+        'file'     => 20,
+        'class'    => 22,
         'function' => 16,
-        'line' => 4,
+        'line'     => 4,
     ];
 
     private static $color = [
-        'file' => ['red'],
-        'class' => ['yellow'],
+        'file'     => ['red'],
+        'class'    => ['yellow'],
         'function' => ['blue'],
-        'line' => ['green'],
+        'line'     => ['green'],
     ];
-
-
-
-
 
 
     private static function file_append_file($string)
     {
-        if(is_array($string)) {
-            $string = print_r($string,1);
+        if (\is_array($string)) {
+            $string = print_r($string, 1);
         }
-        $file = dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1)."/tracefile.txt";
-        $fp = fopen($file, 'a+');
+        $file = \dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1).'/tracefile.txt';
+        $fp   = fopen($file, 'a+');
         fwrite($fp, $string);
         fclose($fp);
     }
-    public static function info($var)
-    {
-         $caller = self::tracePath();
 
-       // $caller = self::CallingFunctionName();
-        self::$DebugArray[] = ['page' => $caller, 'Data' => $var];
+    public static function info(mixed ...$vars)
+    {
+        $info = self::getMethod();
+
+        self::$DebugArray[] = $info;
+        // self::$DebugArray[] = ['page' => $caller, 'Data' => $var];
     }
+
 
     public static function ddump()
     {
@@ -65,6 +63,7 @@ class Debug
     public static function tracePath()
     {
         $trace = debug_backtrace();
+        $classArray = [];
         foreach ($trace as $i => $row) {
             $arg = [];
 
@@ -105,42 +104,133 @@ class Debug
                         }
                     }
                 }
-                $arguments = implode(',', $arg);
+                $arguments    = implode(',', $arg);
                 $classArray[] = self::getClassPath($row['class'], 2).':'.$row['function'].'('.$arguments.')';
             }
         }
 
+        if(count($classArray) > 0){
         $classArray = array_reverse($classArray);
         foreach ($classArray as $k => $classPath) {
             [$class,$method] = explode(':', $classPath);
-            $class = str_replace('\\', '_', $class);
-            $path[$class][] = $method;
+            $class           = str_replace('\\', '_', $class);
+            $path[$class][]  = $method;
         }
 
         foreach ($path as $classPath => $methods) {
             $classPath = str_replace('_', '\\', $classPath);
             if (\is_array($methods)) {
-                $level = 4;
-                $spaces = str_repeat(' ', $level * 4);
+                $level      = 4;
+                $spaces     = str_repeat(' ', $level * 4);
                 $methodPath = implode("\n".$spaces.'->', $methods);
             }
             $fullPath[] = $classPath.':'.$methodPath;
         }
-        $level = 1;
+        $level  = 1;
         $spaces = str_repeat(' ', $level * 4);
 
         return "\n".implode("\n".$spaces.'->', $fullPath);
     }
+    return "";
+    }
+
+    public static function getMethod()
+    {
+        $root = \dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
+
+        $trace = debug_backtrace();
+        $class    = '';
+
+        // self::file_append_file($trace);
+        for ($i=0; $i < \count($trace); ++$i) {
+            $arg = [];
+
+            if (str_contains($trace[$i]['file'], 'vendor')) {
+                continue;
+            }
+
+            // if (\array_key_exists('class', $trace[$i])) {
+            //     if (str_contains($trace[$i]['class'], 'Symfony')) {
+            //         continue;
+            //     }
+            //     if (str_contains($trace[$i]['class'], 'Debug')) {
+            //         continue;
+            //     }
+            //     if (str_contains($trace[$i]['class'], 'Monolog')) {
+            //         continue;
+            //     }
+            //     if (str_contains($trace[$i]['class'], 'Monolog')) {
+            //         if (str_contains($trace[$i]['function'], 'logger')) {
+            //             $calledFile = self::returnTrace('file', $trace[$i]);
+            //             $calledLine = self::returnTrace('line', $trace[$i]);
+            //         }
+            //         continue;
+            //     }
+            //     // if(!isset($calledFile)) {
+            //     // $calledFile = self::returnTrace('file', $row);
+            //     // $calledLine = self::returnTrace('line', $row);
+            //     // }
+            // }
+
+            // if (str_contains($trace[$i]['function'], 'require')) {
+            //     continue;
+            // }
+            // if (str_contains($row['function'], 'utminfo')) {
+            //     continue;
+            // }
+
+            if (str_contains($trace[$i]['function'], 'utminfo')) {
+                $calledFile = $trace[$i]['file'];
+                $calledLine = $trace[$i]['line'];
+                $function   =  $trace[$i]['function'];
+
+                if (\array_key_exists($i + 1, $trace)) {
+                    if (\array_key_exists('class', $trace[$i + 1])) {
+                        $class    =  $trace[$i + 1]['class'].':';
+                        $function =  $trace[$i + 1]['function'];
+                    }
+                }
+
+                // continue;
+
+                if (\array_key_exists('args', $trace[$i])) {
+                    $args = $trace[$i]['args'];
+                    if (\is_array($args)) {
+                        foreach ($args as $k => $value) {
+                            if ('' != $value) {
+                                if (\is_array($value)) {
+                                    continue;
+                                }
+                                if (\is_object($value)) {
+                                    continue;
+                                }
+                                $arg[] = "'".$value."'";
+                            }
+                        }
+                    }
+                }
+
+                $arguments    = implode(',', $arg);
+                $calledFile   = str_replace($root, '', $calledFile);
+
+                $classArray = ['file' => $calledFile.'::'.$calledLine, 'method'=>$class.$function, 'arguments'=>'('.$arguments.')'];
+                // self::$stopwatch->lap(self::$stopWatchName);
+                // self::dump($calledFile.'::'.$calledLine . "->".$class.$function);
+               // return implode("\n", $classArray);
+               return $classArray;
+            }
+        }
+    }
 
     public static function CallingFunctionName()
     {
-        $trace = debug_backtrace();
+        $trace     = debug_backtrace();
         $TraceList = '';
 
-        $class = str_pad('', self::$padding['class'], ' ');
+        $class      = str_pad('', self::$padding['class'], ' ');
         $calledFile = str_pad('', self::$padding['file'], ' ');
         $calledLine = str_pad('', self::$padding['line'], ' ');
-        $function = str_pad('', self::$padding['function'], ' ');
+        $function   = str_pad('', self::$padding['function'], ' ');
 
         foreach ($trace as $key => $row) {
             if (\array_key_exists('class', $row)) {
@@ -159,7 +249,7 @@ class Debug
                     if (str_contains($row['function'], 'LogStart')) {
                         $calledFile = self::returnTrace('file', $row);
                         $calledLine = self::returnTrace('line', $row);
-                        $TraceList = $calledFile.':'.$calledLine;
+                        $TraceList  = $calledFile.':'.$calledLine;
                         break;
                     }
                     continue;
