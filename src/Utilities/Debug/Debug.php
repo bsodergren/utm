@@ -1,6 +1,6 @@
 <?php
 /**
- *  Plexweb
+ *  Plexweb.
  */
 
 namespace UTM\Utilities\Debug;
@@ -12,26 +12,26 @@ class Debug
     public static $DebugArray = [];
 
     private static $padding = [
-        'file'     => 20,
-        'class'    => 22,
+        'file' => 20,
+        'class' => 22,
         'function' => 16,
-        'line'     => 4,
+        'line' => 4,
     ];
 
     private static $color = [
-        'file'     => ['red'],
-        'class'    => ['yellow'],
+        'file' => ['red'],
+        'class' => ['yellow'],
         'function' => ['blue'],
-        'line'     => ['green'],
+        'line' => ['green'],
     ];
 
-    private static function file_append_file($string, $name ='tracefile.txt')
+    private static function file_append_file($string, $name = 'tracefile.txt')
     {
         if (\is_array($string)) {
             $string = print_r($string, 1);
         }
         $file = \dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1).\DIRECTORY_SEPARATOR.$name;
-        $fp   = fopen($file, 'a+');
+        $fp = fopen($file, 'a+');
         fwrite($fp, $string.\PHP_EOL);
         fclose($fp);
     }
@@ -89,7 +89,7 @@ class Debug
 
     public static function tracePath()
     {
-        $trace      = debug_backtrace();
+        $trace = debug_backtrace();
         $classArray = [];
         foreach ($trace as $i => $row) {
             $arg = [];
@@ -131,7 +131,7 @@ class Debug
                         }
                     }
                 }
-                $arguments    = implode(',', $arg);
+                $arguments = implode(',', $arg);
                 $classArray[] = self::getClassPath($row['class'], 2).':'.$row['function'].'('.$arguments.')';
             }
         }
@@ -140,20 +140,20 @@ class Debug
             $classArray = array_reverse($classArray);
             foreach ($classArray as $k => $classPath) {
                 [$class,$method] = explode(':', $classPath);
-                $class           = str_replace('\\', '_', $class);
-                $path[$class][]  = $method;
+                $class = str_replace('\\', '_', $class);
+                $path[$class][] = $method;
             }
 
             foreach ($path as $classPath => $methods) {
                 $classPath = str_replace('_', '\\', $classPath);
                 if (\is_array($methods)) {
-                    $level      = 4;
-                    $spaces     = str_repeat(' ', $level * 4);
+                    $level = 4;
+                    $spaces = str_repeat(' ', $level * 4);
                     $methodPath = implode("\n".$spaces.'->', $methods);
                 }
                 $fullPath[] = $classPath.':'.$methodPath;
             }
-            $level  = 1;
+            $level = 1;
             $spaces = str_repeat(' ', $level * 4);
 
             return "\n".implode("\n".$spaces.'->', $fullPath);
@@ -164,7 +164,7 @@ class Debug
 
     private static function cleanArgs($args)
     {
-        $arguments =(new PrettyArray())->print($args);
+        $arguments = (new PrettyArray())->print($args);
 
         // self::file_append_file($arguments,"artlist.txt");
 
@@ -188,11 +188,11 @@ class Debug
     {
         $root = \dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
 
-        $trace    = debug_backtrace();
-        $class    = '';
-        $arg      = [];
+        $trace = debug_backtrace();
+        $class = '';
+        $arg = [];
 
-        for ($i=0; $i < \count($trace); ++$i) {
+        for ($i = 0; $i < \count($trace); ++$i) {
             if (str_contains($trace[$i]['file'], 'vendor')) {
                 continue;
             }
@@ -200,12 +200,12 @@ class Debug
             if (str_contains($trace[$i]['function'], 'utminfo')) {
                 $calledFile = $trace[$i]['file'];
                 $calledLine = $trace[$i]['line'];
-                $function   =  $trace[$i]['function'];
-                $args       = $trace[$i]['args'];
+                $function = $trace[$i]['function'];
+                $args = $trace[$i]['args'];
                 if (\array_key_exists($i + 1, $trace)) {
                     if (\array_key_exists('class', $trace[$i + 1])) {
-                        $class    =  $trace[$i + 1]['class'].':';
-                        $function =  $trace[$i + 1]['function'];
+                        $class = $trace[$i + 1]['class'].':';
+                        $function = $trace[$i + 1]['function'];
 
                         //  $args = $trace[$i+1]['args'];
                     }
@@ -213,22 +213,22 @@ class Debug
 
                 $arguments = self::cleanArgs($args);
 
-                $calledFile   = str_replace($root, '', $calledFile);
+                $calledFile = str_replace($root, '', $calledFile);
 
-                return ['file' => $calledFile.'::'.$calledLine, 'method'=>$class.$function, 'arguments'=>$arguments];
+                return ['file' => $calledFile.'::'.$calledLine, 'method' => $class.$function, 'arguments' => $arguments];
             }
         }
     }
 
     public static function CallingFunctionName()
     {
-        $trace     = debug_backtrace();
+        $trace = debug_backtrace();
         $TraceList = '';
 
-        $class      = str_pad('', self::$padding['class'], ' ');
+        $class = str_pad('', self::$padding['class'], ' ');
         $calledFile = str_pad('', self::$padding['file'], ' ');
         $calledLine = str_pad('', self::$padding['line'], ' ');
-        $function   = str_pad('', self::$padding['function'], ' ');
+        $function = str_pad('', self::$padding['function'], ' ');
 
         foreach ($trace as $key => $row) {
             if (\array_key_exists('class', $row)) {
@@ -247,7 +247,7 @@ class Debug
                     if (str_contains($row['function'], 'LogStart')) {
                         $calledFile = self::returnTrace('file', $row);
                         $calledLine = self::returnTrace('line', $row);
-                        $TraceList  = $calledFile.':'.$calledLine;
+                        $TraceList = $calledFile.':'.$calledLine;
                         break;
                     }
                     continue;
