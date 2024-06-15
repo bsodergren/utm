@@ -39,11 +39,12 @@ class Debug
         //     $line = $trace[2]['line'];
         //     $func = "->".$trace[2]['class']."::".$trace[2]['function'];
         // }
-                // $root = dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
+        // $root = dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
 
         // $calling_func = str_replace($root,'',$file).':'.$line.$func;
-        self::$DebugArray[] = ['page' => $calling_func, 'Data'=> $var];
+        self::$DebugArray[] = ['page' => $calling_func, 'Data' => $var];
     }
+
     public static function ddump()
     {
         utmdump(self::$DebugArray);
@@ -59,6 +60,8 @@ class Debug
 
     public static function tracePath()
     {
+        $root = dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
+
         $trace = debug_backtrace();
 
         foreach ($trace as $i => $row) {
@@ -92,26 +95,25 @@ class Debug
             // if (str_contains($row['function'], 'utminfo')) {
             //     continue;
             // }
-                if (\array_key_exists('args', $row)) {
-                    $args = $row['args'];
-                    if (\is_array($args)) {
-                        foreach ($args as $k => $value) {
-                            if ('' != $value) {
-                                if (\is_array($value)) {
-                                    continue;
-                                }
-                                if (\is_object($value)) {
-                                    continue;
-                                }
-                                $arg[] = "'".$value."'";
+            if (\array_key_exists('args', $row)) {
+                $args = $row['args'];
+                if (\is_array($args)) {
+                    foreach ($args as $k => $value) {
+                        if ('' != $value) {
+                            if (\is_array($value)) {
+                                continue;
                             }
+                            if (\is_object($value)) {
+                                continue;
+                            }
+                            $arg[] = "'".$value."'";
                         }
                     }
                 }
-                $arguments = implode(',', $arg);
-                $arguments = str_replace($root,'',$arguments);
-                $classArray[] = self::getClassPath($row['class'], 2).':'.$row['function'].'('.$arguments.')';
-
+            }
+            $arguments = implode(',', $arg);
+            $arguments = str_replace($root, '', $arguments);
+            $classArray[] = self::getClassPath($row['class'], 2).':'.$row['function'].'('.$arguments.')';
         }
 
         $classArray = array_reverse($classArray);
@@ -133,9 +135,7 @@ class Debug
         $level = 1;
         $spaces = str_repeat(' ', $level * 4);
 
-        $root = dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
-
-        $fullPath = str_replace($root,'',$fullPath);
+        $fullPath = str_replace($root, '', $fullPath);
 
         return implode($spaces.'->', $fullPath);
     }
