@@ -5,7 +5,6 @@
 
 namespace UTM\Utilities\Debug;
 
-use Symfony\Component\VarExporter\VarExporter;
 use UTM\Bundle\Monolog\UTMLog;
 
 class Debug
@@ -165,30 +164,22 @@ class Debug
 
     private static function cleanArgs($args)
     {
+        $arguments =(new PrettyArray())->print($args);
 
+        // self::file_append_file($arguments,"artlist.txt");
 
-    if(is_object($args)){
-        return "";
-    }
+        // $arguments    = str_replace(["\t", "\n"], '',   $arguments);
 
+        // return $arguments;
 
+        // $arguments    = str_replace(',]', ']', $arguments);
+        // // $arguments    = str_replace("[[","",$arguments);
 
-        $arguments = zhilify($args);
-        self::file_append_file($arguments,"arguments.txt");
-                // self::file_append_file($arguments,"artlist.txt");
-
-       // $arguments    = str_replace(["\t", "\n"], '',   $arguments);
-
-                // return $arguments;
-
-        $arguments    = str_replace(',]', ']', $arguments);
-        // $arguments    = str_replace("[[","",$arguments);
-
-        if (str_contains($arguments, '=>')) {
-            $arguments    = str_replace('[[', "[[\n   ", $arguments);
-            $arguments    = str_replace("',", "'\n   ", $arguments);
-            $arguments    = str_replace(']]', "\n]]", $arguments);
-        }
+        // if (str_contains($arguments, '=>')) {
+        //     $arguments    = str_replace('[[', "[[\n   ", $arguments);
+        //     $arguments    = str_replace("',", "'\n   ", $arguments);
+        //     $arguments    = str_replace(']]', "\n]]", $arguments);
+        // }
 
         return $arguments;
     }
@@ -211,7 +202,6 @@ class Debug
                 $calledLine = $trace[$i]['line'];
                 $function   =  $trace[$i]['function'];
                 $args       = $trace[$i]['args'];
-                self::file_append_file($args, 'argList.txt');
                 if (\array_key_exists($i + 1, $trace)) {
                     if (\array_key_exists('class', $trace[$i + 1])) {
                         $class    =  $trace[$i + 1]['class'].':';
