@@ -28,20 +28,19 @@ class Debug
 
     public static function info($var)
     {
-        $calling_func = self::tracePath();
+        // $calling_func = self::tracePath();
+        $trace = debug_backtrace();
+        $file = $trace[1]['file'];
+        $line = $trace[1]['line'];
+        $func = '';
+        if (array_key_exists('2', $trace)) {
+            $file = $trace[2]['file'];
+            $line = $trace[2]['line'];
+            $func = '->'.$trace[2]['class'].'::'.$trace[2]['function'];
+        }
+        $root = dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
 
-        // $file = $trace[1]['file'];
-        // $line = $trace[1]['line'];
-        // $func = '';
-        // if(array_key_exists('2',$trace)){
-
-        //     $file = $trace[2]['file'];
-        //     $line = $trace[2]['line'];
-        //     $func = "->".$trace[2]['class']."::".$trace[2]['function'];
-        // }
-        // $root = dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
-
-        // $calling_func = str_replace($root,'',$file).':'.$line.$func;
+        $calling_func = str_replace($root, '', $file).':'.$line.$func;
         self::$DebugArray[] = ['page' => $calling_func, 'Data' => $var];
     }
 
