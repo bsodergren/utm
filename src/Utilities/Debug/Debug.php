@@ -38,11 +38,37 @@ class Debug
         fclose($fp);
     }
 
+    public static function findTextByValueInArray($fooArray, $searchValue){
+        foreach ($fooArray as $index => $bar )
+        {
+            if ($bar['file'] == $searchValue) {
+                return $index;//['text'];
+            }
+        }
+        return false;
+    }
+
     public static function info(mixed ...$vars)
     {
         $info = self::getMethod();
 
-        self::$DebugArray[] = $info;
+        $currentKey = self::findTextByValueInArray(self::$DebugArray, $info['file']);
+        if( $currentKey !== false)
+        {
+            $currentValue = self::$DebugArray[$currentKey]['arguments'];
+            if(is_string($currentValue)){
+
+                //$currentValue[] =
+                unset(self::$DebugArray[$currentKey]['arguments']);
+                self::$DebugArray[$currentKey]['arguments'] = [$currentValue,$info['arguments']];
+            } else {
+                array_push(self::$DebugArray[$currentKey],$info['arguments']);
+            }
+
+
+        } else {
+            self::$DebugArray[] = $info;
+        }
         // self::$DebugArray[] = ['page' => $caller, 'Data' => $var];
     }
 
