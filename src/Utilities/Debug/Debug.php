@@ -7,15 +7,16 @@ namespace UTM\Utilities\Debug;
 
 use UTM\Bundle\Monolog\UTMLog;
 
-class Debug 
+class Debug
 {
     public $traceStripPrefix = 'ore';
+    public static $DebugArray = [];
 
     private static $padding = [
-        'file' => 20,
-        'class' => 22,
-        'function' => 16,
-        'line' => 4,
+        'file' => 0,
+        'class' => 0,
+        'function' => 0,
+        'line' => 0,
     ];
 
     private static $color = [
@@ -24,6 +25,29 @@ class Debug
         'function' => ['blue'],
         'line' => ['green'],
     ];
+
+    public static function info($var)
+    {
+        $calling_func = self::tracePath();
+
+        // $file = $trace[1]['file'];
+        // $line = $trace[1]['line'];
+        // $func = '';
+        // if(array_key_exists('2',$trace)){
+
+        //     $file = $trace[2]['file'];
+        //     $line = $trace[2]['line'];
+        //     $func = "->".$trace[2]['class']."::".$trace[2]['function'];
+        // }
+                // $root = dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
+
+        // $calling_func = str_replace($root,'',$file).':'.$line.$func;
+        self::$DebugArray[] = ['page' => $calling_func, 'Data'=> $var];
+    }
+    public static function ddump()
+    {
+        utmdump(self::$DebugArray);
+    }
 
     public static function print_array($array, $die = 0)
     {
@@ -36,6 +60,7 @@ class Debug
     public static function tracePath()
     {
         $trace = debug_backtrace();
+
         foreach ($trace as $i => $row) {
             $arg = [];
 
@@ -60,6 +85,13 @@ class Debug
                     }
                     continue;
                 }
+            }
+            // if (str_contains($row['function'], 'require')) {
+            //     continue;
+            // }
+            // if (str_contains($row['function'], 'utminfo')) {
+            //     continue;
+            // }
                 if (\array_key_exists('args', $row)) {
                     $args = $row['args'];
                     if (\is_array($args)) {
@@ -77,8 +109,9 @@ class Debug
                     }
                 }
                 $arguments = implode(',', $arg);
+                $arguments = str_replace($root,'',$arguments);
                 $classArray[] = self::getClassPath($row['class'], 2).':'.$row['function'].'('.$arguments.')';
-            }
+
         }
 
         $classArray = array_reverse($classArray);
@@ -92,15 +125,19 @@ class Debug
             $classPath = str_replace('_', '\\', $classPath);
             if (\is_array($methods)) {
                 $level = 4;
-                $spaces = str_repeat(' ', $level * 4);
-                $methodPath = implode("\n".$spaces.'->', $methods);
+                $spaces = str_repeat('', $level * 4);
+                $methodPath = implode($spaces.'->', $methods);
             }
             $fullPath[] = $classPath.':'.$methodPath;
         }
         $level = 1;
         $spaces = str_repeat(' ', $level * 4);
 
-        return "\n".implode("\n".$spaces.'->', $fullPath);
+        $root = dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
+
+        $fullPath = str_replace($root,'',$fullPath);
+
+        return implode($spaces.'->', $fullPath);
     }
 
     public static function CallingFunctionName()
@@ -142,10 +179,12 @@ class Debug
             if (str_contains($row['function'], 'require')) {
                 continue;
             }
+            // if (str_contains($row['function'], 'utminfo')) {
+            //     continue;
+            // }
             if ($row['function']) {
                 $function = self::returnTrace('function', $row);
             }
-
             $TraceList = $calledFile.':'.$class.':'.$function.':'.$calledLine;
             break;
         }
@@ -180,7 +219,8 @@ class Debug
             $text = substr($text, 0, self::$padding[$type]);
             $text = str_pad($text, self::$padding[$type], ' ');
 
-            return UTMLog::formatPrint($text, self::$color[$type]);
+            // return UTMLog::formatPrint($text, self::$color[$type]);
+            return $text;
         }
 
         return null;

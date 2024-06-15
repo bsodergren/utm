@@ -11,6 +11,7 @@
 
 use Symfony\Component\VarDumper\Caster\ScalarStub;
 use Symfony\Component\VarDumper\VarDumper;
+use UTM\Utilities\Debug\Debug;
 
 function DumpServerExists()
 {
@@ -76,5 +77,18 @@ if (!function_exists('Utmdd')) {
         }
 
         exit(1);
+    }
+}
+
+if (!function_exists('utminfo')) {
+    function utminfo(mixed ...$vars)
+    {
+        Debug::info($vars);
+    }
+}
+if (!function_exists('utmddump')) {
+    function utmddump()
+    {
+        Debug::ddump();
     }
 }
