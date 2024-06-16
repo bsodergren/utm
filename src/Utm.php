@@ -8,16 +8,16 @@ class Utm
 {
     public static $SHOW_HTML_DUMP = false;
     public static $LOG_DIR = __DIR__.'/logs';
-
+    public static $LOG_STYLE = 'pretty';
     private static $logger;
 
     public function __construct($logdir = null)
     {
-        if($logdir !== null){
+        if (null !== $logdir) {
             self::$LOG_DIR = $logdir;
         }
 
-        self::$logger = Logger::make()->path(self::$LOG_DIR);
+        self::$logger = Logger::make(self::$LOG_STYLE)->path(self::$LOG_DIR);
     }
 
     public static function __callStatic($method, $args)
