@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "809ed33d06276af6482853a2afec14ff",
+    "content-hash": "cea78f815e09d425919eb83b44c34e22",
     "packages": [
         {
             "name": "camoo/config",
@@ -703,6 +703,65 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.0"
             },
             "time": "2021-07-14T16:46:02+00:00"
+        },
+        {
+            "name": "salibhdr/php-dump-logger",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SaliBhdr/php-dump-logger.git",
+                "reference": "8b33c562fa85cba959dd9aa2cf609bd2318abe0b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SaliBhdr/php-dump-logger/zipball/8b33c562fa85cba959dd9aa2cf609bd2318abe0b",
+                "reference": "8b33c562fa85cba959dd9aa2cf609bd2318abe0b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 | ^7.3 | ^7.4 | ^8.0 | ^8.1 | ^8.2",
+                "symfony/var-dumper": "^5 | ^6 | ^7"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2 | ^3",
+                "mockery/mockery": "^1",
+                "phpunit/phpunit": "^6 | ^7 | ^8 | ^9"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "SaliBhdr\\DumpLog\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Salar Bahador",
+                    "email": "bahador.salar@gmail.com"
+                }
+            ],
+            "description": "PHP dump logger uses Symfony's var-dumper to create a simple, easy to use, eye-friendly, and pretty log files for any PHP application. It can be used either standalone, with Laravel, Symfony, yii2, and other PHP frameworks",
+            "keywords": [
+                "dump logger",
+                "eye friendly logger",
+                "laravel",
+                "log",
+                "logger",
+                "php",
+                "php dump logger",
+                "pretty logger",
+                "salibhdr",
+                "simple logger",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/SaliBhdr/php-dump-logger/issues",
+                "source": "https://github.com/SaliBhdr/php-dump-logger"
+            },
+            "time": "2024-05-06T17:27:12+00:00"
         },
         {
             "name": "symfony/config",
@@ -2837,7 +2896,7 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "nette/utils": 20
     },
@@ -2847,5 +2906,5 @@
         "php": ">=8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

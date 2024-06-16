@@ -12,6 +12,7 @@
 use Symfony\Component\VarDumper\Caster\ScalarStub;
 use Symfony\Component\VarDumper\VarDumper;
 use UTM\Utilities\Debug\Debug;
+use UTM\Utm;
 
 function DumpServerExists()
 {
@@ -20,7 +21,7 @@ function DumpServerExists()
         return true;
     }
 
-    return false;
+    return Utm::$SHOW_HTML_DUMP;
 }
 
 if (!function_exists('UtmDump')) {
