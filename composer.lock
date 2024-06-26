@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "da56719d69e66401d81c1e410122c5fa",
+    "content-hash": "cea78f815e09d425919eb83b44c34e22",
     "packages": [
         {
             "name": "camoo/config",
