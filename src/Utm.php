@@ -2,9 +2,8 @@
 
 namespace UTM;
 
-use SaliBhdr\DumpLog\Factory\Logger;
 use Dotenv\Dotenv;
-
+use SaliBhdr\DumpLog\Factory\Logger;
 
 class Utm
 {
@@ -21,12 +20,12 @@ class Utm
 
         self::$logger = Logger::make(self::$LOG_STYLE)->path(self::$LOG_DIR);
     }
+
     public static function LoadEnv($directory = '')
     {
-
-        if(!is_dir($directory)) {
-            if(defined('__COMPOSER_DIR__')) {
-                $directory = dirname(__COMPOSER_DIR__,1);
+        if (!is_dir($directory)) {
+            if (defined('__COMPOSER_DIR__')) {
+                $directory = dirname(__COMPOSER_DIR__, 1);
             } else {
                 return false;
             }
@@ -39,8 +38,9 @@ class Utm
             $env_file = '.env-server';
         }
 
-        return Dotenv::createUnsafeImmutable($directory, $env_file);
+        return Dotenv::createUnsafeImmutable($directory, $env_file)->load();
     }
+
     public static function __callStatic($method, $args)
     {
         switch ($method) {
