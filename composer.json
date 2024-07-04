@@ -4,17 +4,16 @@
     "type": "library",
     "license": "GPL-2.0-only",
     "require": {
-        "php": ">=8.0",
-        "symfony/monolog-bundle": "^3.8",
-        "symfony/stopwatch": "^6.2",
         "camoo/config": "^1.0",
-        "nesbot/carbon": "^2.71",
-        "nette/utils": "^4.0@dev",
+        "nette/utils": "^4.0",
+        "vlucas/phpdotenv": "^5.6",
+        "symfony/yaml": "^7.1",
         "nette/robot-loader": "^4.0",
-        "symfony/yaml": "^7.0",
-        "salibhdr/php-dump-logger": "^2.1",
-        "vlucas/phpdotenv": "^5.6"
-        },
+        "symfony/monolog-bundle": "^3.10",
+        "symfony/stopwatch": "^7.1",
+        "nesbot/carbon": "^3.6",
+        "salibhdr/php-dump-logger": "^2.1"
+    },
         "require-dev": {
             "symfony/var-dumper": "^6.4|^7.0"
         },
