@@ -23,8 +23,9 @@ class Item
      */
     public function __construct($data, $minutes = 0)
     {
+        $maxValue = Carbon::create(999,12,30,1);
         $this->data = $data;
-        $this->expires = 0 == $minutes ? Carbon::maxValue() : Carbon::now()->addMinutes($minutes);
+        $this->expires = 0 == $minutes ?  $maxValue: Carbon::now()->addMinutes($minutes);
     }
 
     /**
