@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 declare(strict_types=1);
 
@@ -19,16 +22,16 @@ final class PrettyArray
     public function __construct()
     {
         $this->resolverCallbacks = [
-            'class' => function ($value) {
+            'class'   => function ($value) {
                 $class = \str_replace('\\\\', '\\', $value);
                 $class = \sprintf('%s::class', $class);
 
-                return 0 === \mb_strpos($class, '\\') ? $class : '\\'.$class;
+                return 0 === \mb_strpos($class, '\\') ? $class : '\\' . $class;
             },
             'integer' => function ($value) {
                 return (string) $value;
             },
-            'double' => function ($value) {
+            'double'  => function ($value) {
                 return (string) $value;
             },
         ];
@@ -51,11 +54,11 @@ final class PrettyArray
      */
     public function print(array $data, int $indentLevel = 1): string
     {
-        $indentChar = ' ';
+        $indentChar  = ' ';
         $indentMulti = 2;
 
-        $indent = \str_repeat($indentChar, $indentLevel * $indentMulti);
-        $entries = [];
+        $indent      = \str_repeat($indentChar, $indentLevel * $indentMulti);
+        $entries     = [];
 
         foreach ($data as $key => $value) {
             if (!\is_int($key)) {
@@ -70,13 +73,13 @@ final class PrettyArray
                 '%s%s%s,',
                 $indent,
                 \sprintf('%s => ', $key),
-                $this->createValue($value, $indentLevel)
+                $this->createValue($value, $indentLevel),
             );
         }
 
         $outerIndent = \str_repeat($indentChar, ($indentLevel - 1) * $indentMulti);
         if (count($entries) > 0) {
-            return \sprintf('['.PHP_EOL.'%s'.PHP_EOL.'%s]', \implode(\PHP_EOL, $entries), $outerIndent);
+            return \sprintf('[' . PHP_EOL . '%s' . PHP_EOL . '%s]', \implode(\PHP_EOL, $entries), $outerIndent);
         }
 
         return \sprintf('[]');
@@ -113,7 +116,7 @@ final class PrettyArray
             return false;
         }
 
-        $key = \ltrim($key, '\\');
+        $key       = \ltrim($key, '\\');
         $firstChar = \mb_substr($key, 0, 1);
 
         return (\class_exists($key) || \interface_exists($key)) && \mb_strtolower($firstChar) !== $firstChar;

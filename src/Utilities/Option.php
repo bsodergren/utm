@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace UTM\Utilities;
 
@@ -63,7 +66,7 @@ class Option extends InputOption
             $value = self::$options[$name];
             if (!\is_array($value)) {
                 if (str_contains($value, ',')) {
-                    $value = explode(',', $value);
+                    $value  = explode(',', $value);
                     $result = self::valueIsArray($value, $name);
                 } else {
                     $result = self::valueIsString($value, $name);

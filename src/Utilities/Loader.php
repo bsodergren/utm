@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace UTM\Utilities;
 
@@ -12,11 +15,11 @@ class Loader extends RobotLoader
         $DbConfig = new Config($config);
 
         foreach ($DbConfig as $key => $data) {
-            $define_name = $prefix_pattern.strtoupper($key.'_prefix').$suffix;
+            $define_name = $prefix_pattern . strtoupper($key . '_prefix') . $suffix;
             define($define_name, $data['prefix']);
             foreach ($data['tables'] as $k => $t) {
-                $table_def_name = $define_pattern.strtoupper($t).$suffix;
-                define($table_def_name, $data['prefix'].$t);
+                $table_def_name = $define_pattern . strtoupper($t) . $suffix;
+                define($table_def_name, $data['prefix'] . $t);
             }
         }
     }

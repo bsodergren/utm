@@ -1,10 +1,12 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace UTM\Utilities;
 
 class Utilities
 {
-
     public static function isTrue($define_name)
     {
         if (defined($define_name)) {
@@ -26,11 +28,9 @@ class Utilities
         return 0;
     }
     public static function toint($string)
-	{
-		
-		$string_ret = str_replace(",","",$string);
-		return $string_ret;
-	}
+    {
+
+        $string_ret = str_replace(",", "", $string);
+        return $string_ret;
+    }
 }
-
-

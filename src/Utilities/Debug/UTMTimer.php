@@ -1,10 +1,14 @@
-<?php 
+<?php
+/**
+ * Command like Metatag writer for video files.
+ */
+
 namespace UTM\Utilities\Debug;
 
 class UTMTimer
 {
     private static float $origin;
-   private static float $lastTimer;
+    private static float $lastTimer;
 
     public static function start()
     {
@@ -36,9 +40,9 @@ class UTMTimer
      */
     public static function getDuration()
     {
-        $lastTime = self::$lastTimer;
+        $lastTime    = self::$lastTimer;
         $currentTime = self::getNow();
-       $duration= self::formatTime($currentTime  - $lastTime);
+        $duration    = self::formatTime($currentTime  - $lastTime);
         utmdump([$duration,$lastTime,$currentTime]);
     }
 
