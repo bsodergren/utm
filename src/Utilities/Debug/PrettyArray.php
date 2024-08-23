@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace UTM\Utilities\Debug;
 
 final class PrettyArray
@@ -21,7 +23,7 @@ final class PrettyArray
                 $class = \str_replace('\\\\', '\\', $value);
                 $class = \sprintf('%s::class', $class);
 
-                return \mb_strpos($class, '\\') === 0 ? $class : '\\' . $class;
+                return 0 === \mb_strpos($class, '\\') ? $class : '\\'.$class;
             },
             'integer' => function ($value) {
                 return (string) $value;
@@ -36,11 +38,6 @@ final class PrettyArray
      * Add a type resolver.
      *
      * @see http://php.net/manual/en/function.gettype.php for the supported types
-     *
-     * @param string   $type
-     * @param \Closure $closure
-     *
-     * @return void
      */
     public function setResolver(string $type, \Closure $closure): void
     {
@@ -51,17 +48,17 @@ final class PrettyArray
      * Returns a pretty php array for saving or output.
      *
      * @param mixed[] $data
-     * @param int     $indentLevel
-     *
-     * @return string
      */
     public function print(array $data, int $indentLevel = 1): string
     {
-        $indent  = \str_repeat(' ', $indentLevel * 4);
+        $indentChar = ' ';
+        $indentMulti = 2;
+
+        $indent = \str_repeat($indentChar, $indentLevel * $indentMulti);
         $entries = [];
 
         foreach ($data as $key => $value) {
-            if (! \is_int($key)) {
+            if (!\is_int($key)) {
                 if ($this->isClass($key)) {
                     $key = $this->resolverCallbacks['class']($key);
                 } else {
@@ -77,24 +74,22 @@ final class PrettyArray
             );
         }
 
-        $outerIndent = \str_repeat(' ', ($indentLevel - 1) * 4);
+        $outerIndent = \str_repeat($indentChar, ($indentLevel - 1) * $indentMulti);
+        if (count($entries) > 0) {
+            return \sprintf('['.PHP_EOL.'%s'.PHP_EOL.'%s]', \implode(\PHP_EOL, $entries), $outerIndent);
+        }
 
-        return \sprintf('[' . \PHP_EOL . '%s' . \PHP_EOL . '%s]', \implode(\PHP_EOL, $entries), $outerIndent);
+        return \sprintf('[]');
     }
 
     /**
      * Create the right value.
-     *
-     * @param mixed $value
-     * @param int   $indentLevel
-     *
-     * @return string
      */
     private function createValue($value, int $indentLevel): string
     {
         $type = \gettype($value);
 
-        if ($type === 'array') {
+        if ('array' === $type) {
             return $this->print($value, $indentLevel + 1);
         }
 
@@ -111,18 +106,14 @@ final class PrettyArray
 
     /**
      * Check if entry is a class.
-     *
-     * @param mixed $key
-     *
-     * @return bool
      */
     private function isClass($key): bool
     {
-        if (! \is_string($key)) {
+        if (!\is_string($key)) {
             return false;
         }
 
-        $key       = \ltrim($key, '\\');
+        $key = \ltrim($key, '\\');
         $firstChar = \mb_substr($key, 0, 1);
 
         return (\class_exists($key) || \interface_exists($key)) && \mb_strtolower($firstChar) !== $firstChar;

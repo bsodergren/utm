@@ -27,23 +27,31 @@ class Debug
         'line' => ['green'],
     ];
 
-    private static function rootPath($filename = null)
+    private static function traceFile($filename)
+    {
+        $root = self::rootPath();
+        if (null !== self::$AppTraceDir) {
+            $root = self::$AppTraceDir;
+        }
+
+        $filename = basename($filename);
+        $traceFile = $root.DIRECTORY_SEPARATOR.$filename;
+
+        return $traceFile;
+    }
+
+    private static function rootPath()
     {
         if (array_key_exists('CONTEXT_DOCUMENT_ROOT', $_SERVER)) {
             $root = $_SERVER['CONTEXT_DOCUMENT_ROOT'];
         } else {
             $root = $_SERVER['SCRIPT_FILENAME'];
         }
-
         if (null !== self::$AppRootDir) {
             $root = self::$AppRootDir;
         }
 
         $root = \dirname(realpath($root), 1).DIRECTORY_SEPARATOR;
-
-        if (null !== $filename) {
-            $root = $root.$filename;
-        }
 
         return $root;
     }
@@ -53,11 +61,7 @@ class Debug
         if (\is_array($string)) {
             $string = print_r($string, 1);
         }
-        $file = self::rootPath($name);
-
-        if (null !== self::$AppTraceDir) {
-            $file = self::$AppTraceDir.DIRECTORY_SEPARATOR.$name;
-        }
+        $file = self::traceFile($name);
 
         $fp = fopen($file, 'a+');
         fwrite($fp, $string.\PHP_EOL);
@@ -83,25 +87,24 @@ class Debug
     public static function info(mixed ...$vars)
     {
         $info = self::getMethod();
-        $currentKey = false;
+        // $currentKey = false;
 
         if (null !== $info) {
             $currentKey = self::findTextByValueInArray(self::$DebugArray, $info['file']);
-        }
 
-        if (false !== $currentKey) {
-            $currentValue = self::$DebugArray[$currentKey]['arguments'];
+            if (false !== $currentKey) {
+                $currentValue = self::$DebugArray[$currentKey]['arguments'];
 
-            if (\is_string($currentValue)) {
-                unset(self::$DebugArray[$currentKey]['arguments']);
-                self::$DebugArray[$currentKey]['arguments'] = [$currentValue, $info['arguments']];
+                if (\is_string($currentValue)) {
+                    unset(self::$DebugArray[$currentKey]['arguments']);
+                    self::$DebugArray[$currentKey]['arguments'] = [$currentValue, $info['arguments']];
+                } else {
+                    self::$DebugArray[$currentKey]['arguments'][] = $info['arguments'];
+                }
             } else {
-                self::$DebugArray[$currentKey]['arguments'][] = $info['arguments'];
+                self::$DebugArray[] = $info;
             }
-        } else {
-            self::$DebugArray[] = $info;
         }
-
         // self::$DebugArray[] = ['page' => $caller, 'Data' => $var];
     }
 
@@ -112,28 +115,35 @@ class Debug
 
     public static function writedump($file)
     {
-        $filename = self::rootPath($file);
+        $filename = self::traceFile($file);
         if (file_exists($filename)) {
             unlink($filename);
         }
-
         foreach (self::$DebugArray as $row => $data) {
-            $string = $row.':';
             foreach ($data as $key => $val) {
-                if ('arguments' == $key) {
-                    // continue;
-                }
                 if (is_array($val)) {
                     // $val = print_r($val, 1);
-                    $val = 'array';
+                    $val = self::cleanArgs($val);
+                    // $val = 'array';
+                }
+                if ('arguments' == $key) {
+                    $args = $val;
+                }
+                if ('file' == $key) {
+                    $file = $val;
+                }
+                if ('method' == $key) {
+                    $method = $val;
+                }
+                if ('time' == $key) {
+                    $time = $val;
                 }
                 // $val = str_replace("\n","",$val);
-                $string .= $val.':';
 
                 // utmdump([$row=>[$key,$val]]);
             }
-
-            self::file_append_file($string, $file);
+            $string = '['.$row.']['.$time.']['.$file.']['.$method.']'.$args.'';
+            self::file_append_file($string, $filename);
         }
     }
 
@@ -222,7 +232,7 @@ class Debug
 
     private static function cleanArgs($args)
     {
-        $arguments = (new PrettyArray())->print($args);
+        $arguments = (new PrettyArray())->print($args, 1);
 
         // self::file_append_file($arguments,"artlist.txt");
 
@@ -266,6 +276,10 @@ class Debug
                 // continue;
             }
             if (str_contains($trace[$i]['function'], 'utmshutdown')) {
+                return ['file' => '',
+                    'method' => 'utmshutdown',
+                    'time' => self::cleanTime(TimerNow()),
+                    'arguments' => ''];
                 continue;
             }
 
