@@ -19,18 +19,20 @@ class Option extends InputOption
      *
      * @param mixed $input
      */
-    public static function init(InputInterface $input)
+    public static function init(InputInterface $input, $options = null)
     {
         if (null === self::$options) {
             self::$options = $input->getOptions();
+        }
+
+        if (is_array($options)) {
+            self::$options = array_merge(self::$options, $options);
         }
     }
 
     public static function set($name, $value)
     {
-        if (!\defined($name)) {
-            \define($name, $value);
-        }
+        self::$options = array_merge(self::$options, [$name => $value]);
     }
 
     public static function getOptions()

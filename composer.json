@@ -12,7 +12,8 @@
         "symfony/monolog-bundle": "^3.10",
         "symfony/stopwatch": "^7.1",
         "nesbot/carbon": "^3.6",
-        "salibhdr/php-dump-logger": "^2.1"
+        "salibhdr/php-dump-logger": "^2.1",
+        "symfony/console": "^7.1"
     },
     
         "require-dev": {
