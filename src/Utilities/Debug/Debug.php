@@ -5,6 +5,8 @@
 
 namespace UTM\Utilities\Debug;
 
+use Nette\Utils\FileSystem;
+
 use UTM\Bundle\Monolog\UTMLog;
 
 class Debug
@@ -13,29 +15,30 @@ class Debug
     public static $AppTraceDir;
     public static $DebugArray = [];
 
-    private static $padding = [
-        'file' => 20,
-        'class' => 22,
+    private static $padding   = [
+        'file'     => 20,
+        'class'    => 22,
         'function' => 16,
-        'line' => 4,
+        'line'     => 4,
     ];
 
-    private static $color = [
-        'file' => ['red'],
-        'class' => ['yellow'],
+    private static $color     = [
+        'file'     => ['red'],
+        'class'    => ['yellow'],
         'function' => ['blue'],
-        'line' => ['green'],
+        'line'     => ['green'],
     ];
 
     private static function traceFile($filename)
     {
-        $root = self::rootPath();
+        $root      = self::rootPath();
         if (null !== self::$AppTraceDir) {
             $root = self::$AppTraceDir;
         }
+        FileSystem::createDir($root);
 
-        $filename = basename($filename);
-        $traceFile = $root.DIRECTORY_SEPARATOR.$filename;
+        $filename  = basename($filename);
+        $traceFile = $root . DIRECTORY_SEPARATOR . $filename;
 
         return $traceFile;
     }
@@ -51,7 +54,7 @@ class Debug
             $root = self::$AppRootDir;
         }
 
-        $root = \dirname(realpath($root), 1).DIRECTORY_SEPARATOR;
+        $root = \dirname(realpath($root), 1) . DIRECTORY_SEPARATOR;
 
         return $root;
     }
@@ -63,8 +66,8 @@ class Debug
         }
         $file = self::traceFile($name);
 
-        $fp = fopen($file, 'a+');
-        fwrite($fp, $string.\PHP_EOL);
+        $fp   = fopen($file, 'a+');
+        fwrite($fp, $string . \PHP_EOL);
         fclose($fp);
     }
 
@@ -90,20 +93,20 @@ class Debug
         // $currentKey = false;
 
         if (null !== $info) {
-            $currentKey = self::findTextByValueInArray(self::$DebugArray, $info['file']);
+            // $currentKey = self::findTextByValueInArray(self::$DebugArray, $info['file']);
 
-            if (false !== $currentKey) {
-                $currentValue = self::$DebugArray[$currentKey]['arguments'];
+            // if (false !== $currentKey) {
+            //     $currentValue = self::$DebugArray[$currentKey]['arguments'];
 
-                if (\is_string($currentValue)) {
-                    unset(self::$DebugArray[$currentKey]['arguments']);
-                    self::$DebugArray[$currentKey]['arguments'] = [$currentValue, $info['arguments']];
-                } else {
-                    self::$DebugArray[$currentKey]['arguments'][] = $info['arguments'];
-                }
-            } else {
-                self::$DebugArray[] = $info;
-            }
+            //     if (\is_string($currentValue)) {
+            //         unset(self::$DebugArray[$currentKey]['arguments']);
+            //         self::$DebugArray[$currentKey]['arguments'] = [$currentValue, $info['arguments']];
+            //     } else {
+            //         self::$DebugArray[$currentKey]['arguments'][] = $info['arguments'];
+            //     }
+            // } else {
+            self::$DebugArray[] = $info;
+            // }
         }
         // self::$DebugArray[] = ['page' => $caller, 'Data' => $var];
     }
@@ -142,7 +145,7 @@ class Debug
 
                 // utmdump([$row=>[$key,$val]]);
             }
-            $string = '['.$row.']['.$time.']['.$file.']['.$method.']'.$args.'';
+            $string = '[' . $row . '][' . $time . '][' . $file . '][' . $method . ']' . $args . '';
             self::file_append_file($string, $filename);
         }
     }
@@ -157,7 +160,7 @@ class Debug
 
     public static function tracePath()
     {
-        $trace = debug_backtrace();
+        $trace      = debug_backtrace();
         $classArray = [];
         foreach ($trace as $i => $row) {
             $arg = [];
@@ -194,13 +197,13 @@ class Debug
                                 if (\is_object($value)) {
                                     continue;
                                 }
-                                $arg[] = "'".$value."'";
+                                $arg[] = "'" . $value . "'";
                             }
                         }
                     }
                 }
-                $arguments = implode(',', $arg);
-                $classArray[] = self::getClassPath($row['class'], 2).':'.$row['function'].'('.$arguments.')';
+                $arguments    = implode(',', $arg);
+                $classArray[] = self::getClassPath($row['class'], 2) . ':' . $row['function'] . '(' . $arguments . ')';
             }
         }
 
@@ -208,23 +211,23 @@ class Debug
             $classArray = array_reverse($classArray);
             foreach ($classArray as $k => $classPath) {
                 [$class,$method] = explode(':', $classPath);
-                $class = str_replace('\\', '_', $class);
-                $path[$class][] = $method;
+                $class           = str_replace('\\', '_', $class);
+                $path[$class][]  = $method;
             }
 
             foreach ($path as $classPath => $methods) {
-                $classPath = str_replace('_', '\\', $classPath);
+                $classPath  = str_replace('_', '\\', $classPath);
                 if (\is_array($methods)) {
-                    $level = 4;
-                    $spaces = str_repeat(' ', $level * 4);
-                    $methodPath = implode("\n".$spaces.'->', $methods);
+                    $level      = 4;
+                    $spaces     = str_repeat(' ', $level * 4);
+                    $methodPath = implode("\n" . $spaces . '->', $methods);
                 }
-                $fullPath[] = $classPath.':'.$methodPath;
+                $fullPath[] = $classPath . ':' . $methodPath;
             }
-            $level = 1;
-            $spaces = str_repeat(' ', $level * 4);
+            $level      = 1;
+            $spaces     = str_repeat(' ', $level * 4);
 
-            return "\n".implode("\n".$spaces.'->', $fullPath);
+            return "\n" . implode("\n" . $spaces . '->', $fullPath);
         }
 
         return '';
@@ -254,7 +257,7 @@ class Debug
 
     public static function cleanTime($time)
     {
-        $find = 'default/export-data: ';
+        $find    = 'default/export-data: ';
         $replace = '';
 
         return str_replace($find, $replace, $time);
@@ -262,11 +265,11 @@ class Debug
 
     public static function getMethod()
     {
-        $root = self::rootPath();
+        $root  = self::rootPath();
 
         $trace = debug_backtrace();
         $class = '';
-        $arg = [];
+        $arg   = [];
         // utmdump($trace);
         for ($i = 0; $i < \count($trace); ++$i) {
             if (array_key_exists('file', $trace[$i])) {
@@ -276,9 +279,9 @@ class Debug
                 // continue;
             }
             if (str_contains($trace[$i]['function'], 'utmshutdown')) {
-                return ['file' => '',
-                    'method' => 'utmshutdown',
-                    'time' => self::cleanTime(TimerNow()),
+                return ['file'  => '',
+                    'method'    => 'utmshutdown',
+                    'time'      => self::cleanTime(TimerNow()),
                     'arguments' => ''];
                 continue;
             }
@@ -286,25 +289,25 @@ class Debug
             if (str_contains($trace[$i]['function'], 'utminfo')) {
                 $calledFile = $trace[$i]['file'];
                 $calledLine = $trace[$i]['line'];
-                $function = $trace[$i]['function'];
-                $args = $trace[$i]['args'];
+                $function   = $trace[$i]['function'];
+                $args       = $trace[$i]['args'];
                 if (\array_key_exists($i + 1, $trace)) {
                     if (\array_key_exists('class', $trace[$i + 1])) {
-                        $class = $trace[$i + 1]['class'].':';
+                        $class    = $trace[$i + 1]['class'] . ':';
                         $function = $trace[$i + 1]['function'];
 
                         //  $args = $trace[$i+1]['args'];
                     }
                 }
 
-                $arguments = self::cleanArgs($args);
-                $timer = self::cleanTime(TimerNow());
+                $arguments  = self::cleanArgs($args);
+                $timer      = self::cleanTime(TimerNow());
 
                 $calledFile = str_replace($root, '', $calledFile);
 
-                return ['file' => $calledFile.'::'.$calledLine,
-                    'method' => $class.$function,
-                    'time' => $timer,
+                return ['file'  => $calledFile . '::' . $calledLine,
+                    'method'    => $class . $function,
+                    'time'      => $timer,
                     'arguments' => $arguments];
             }
         }
@@ -312,13 +315,13 @@ class Debug
 
     public static function CallingFunctionName()
     {
-        $trace = debug_backtrace();
-        $TraceList = '';
+        $trace      = debug_backtrace();
+        $TraceList  = '';
 
-        $class = str_pad('', self::$padding['class'], ' ');
+        $class      = str_pad('', self::$padding['class'], ' ');
         $calledFile = str_pad('', self::$padding['file'], ' ');
         $calledLine = str_pad('', self::$padding['line'], ' ');
-        $function = str_pad('', self::$padding['function'], ' ');
+        $function   = str_pad('', self::$padding['function'], ' ');
 
         foreach ($trace as $key => $row) {
             if (\array_key_exists('class', $row)) {
@@ -337,7 +340,7 @@ class Debug
                     if (str_contains($row['function'], 'LogStart')) {
                         $calledFile = self::returnTrace('file', $row);
                         $calledLine = self::returnTrace('line', $row);
-                        $TraceList = $calledFile.':'.$calledLine;
+                        $TraceList  = $calledFile . ':' . $calledLine;
                         break;
                     }
                     continue;
@@ -353,7 +356,7 @@ class Debug
                 $function = self::returnTrace('function', $row);
             }
 
-            $TraceList = $calledFile.':'.$class.':'.$function.':'.$calledLine;
+            $TraceList = $calledFile . ':' . $class . ':' . $function . ':' . $calledLine;
             break;
         }
         //  $TraceList = str_pad($TraceList, 100, '.');
@@ -365,7 +368,7 @@ class Debug
     {
         preg_match('/.*\\\\([A-Za-z]+)\\\\([A-Za-z]+)/', $class, $out);
         if (2 == $level) {
-            return $out[1].'\\'.$out[2];
+            return $out[1] . '\\' . $out[2];
         }
 
         return $out[2];
