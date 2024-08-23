@@ -1,12 +1,6 @@
 <?php
-
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+/**
+ * Command like Metatag writer for video files.
  */
 
 use Symfony\Component\VarDumper\Caster\ScalarStub;
@@ -91,5 +85,15 @@ if (!function_exists('utmddump')) {
     function utmddump()
     {
         Debug::ddump();
+    }
+}
+if (!function_exists('utmshutdown')) {
+    function utmshutdown($file = null)
+    {
+        if (null === $file) {
+            Debug::ddump();
+        } else {
+            Debug::writedump($file);
+        }
     }
 }

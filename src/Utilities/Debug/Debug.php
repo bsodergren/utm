@@ -9,6 +9,7 @@ use UTM\Bundle\Monolog\UTMLog;
 
 class Debug
 {
+    public static $AppRootDir;
     public static $DebugArray = [];
 
     private static $padding = [
@@ -25,12 +26,34 @@ class Debug
         'line' => ['green'],
     ];
 
+    private static function rootPath($filename = null)
+    {
+        if (array_key_exists('CONTEXT_DOCUMENT_ROOT', $_SERVER)) {
+            $root = $_SERVER['CONTEXT_DOCUMENT_ROOT'];
+        } else {
+            $root = $_SERVER['SCRIPT_FILENAME'];
+        }
+
+        if (null !== self::$AppRootDir) {
+            $root = self::$AppRootDir;
+        }
+
+        $root = \dirname(realpath($root), 1).DIRECTORY_SEPARATOR;
+
+        if (null !== $filename) {
+            $root = $root.$filename;
+        }
+
+        return $root;
+    }
+
     private static function file_append_file($string, $name = 'tracefile.txt')
     {
         if (\is_array($string)) {
             $string = print_r($string, 1);
         }
-        $file = \dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1).\DIRECTORY_SEPARATOR.$name;
+        $file = self::rootPath($name);
+
         $fp = fopen($file, 'a+');
         fwrite($fp, $string.\PHP_EOL);
         fclose($fp);
@@ -77,6 +100,33 @@ class Debug
     public static function ddump()
     {
         utmdump(self::$DebugArray);
+    }
+
+    public static function writedump($file)
+    {
+        $filename = self::rootPath($file);
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
+
+        foreach (self::$DebugArray as $row => $data) {
+            $string = $row.':';
+            foreach ($data as $key => $val) {
+                if ('arguments' == $key) {
+                    continue;
+                }
+                if (is_array($val)) {
+                    // $val = print_r($val, 1);
+                    $val = 'array';
+                }
+                // $val = str_replace("\n","",$val);
+                $string .= $val.':';
+
+                // utmdump([$row=>[$key,$val]]);
+            }
+
+            self::file_append_file($string, $file);
+        }
     }
 
     public static function print_array($array, $die = 0)
@@ -186,12 +236,7 @@ class Debug
 
     public static function getMethod()
     {
-        if (array_key_exists('CONTEXT_DOCUMENT_ROOT', $_SERVER)) {
-            $rootpath = $_SERVER['CONTEXT_DOCUMENT_ROOT'];
-        } else {
-            $rootpath = $_SERVER['SCRIPT_FILENAME'];
-        }
-        $root = \dirname(realpath($rootpath), 1);
+        $root = self::rootPath();
 
         $trace = debug_backtrace();
         $class = '';
