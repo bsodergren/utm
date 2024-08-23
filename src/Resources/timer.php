@@ -1,31 +1,25 @@
 <?php
-use UTM\Utilities\Debug\UTMTimer;
 /**
  * Command like Metatag writer for video files.
  */
 
+use Symfony\Component\Stopwatch\Stopwatch;
+use UTM\Utilities\Debug\Timer;
+
+/*
+ * Command like Metatag writer for video files.
+ */
 
 if (!function_exists('TimerStart')) {
-      function TimerStart()
+    function TimerStart()
     {
-        return UTMTimer::start();
+        Timer::$Obj = new Timer(new Stopwatch());
+        Timer::$Obj->start();
     }
-
-
 }
 if (!function_exists('TimerNow')) {
-      function TimerNow()
+    function TimerNow()
     {
-        return UTMTimer::getNow();
+        return Timer::$Obj->watch();
     }
-
-    
-}
-if (!function_exists('TimerDuration')) {
-    function TimerDuration()
-  {
-      return UTMTimer::getDuration();
-  }
-
-  
 }

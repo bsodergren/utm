@@ -5,51 +5,27 @@
 
 namespace UTM\Utilities\Debug;
 
-use UTM\Utilities\Debug\UtmStopWatch;
-use UTM\Bundle\Monolog\UTMLog;
+use Symfony\Component\Stopwatch\Stopwatch;
 
-class Timer extends UtmStopWatch
+class Timer
 {
+    public static $Obj;
     public static $logProc = false;
 
-    public static function startwatch($input, $output, $options = [])
-    {
-        parent::init($input, $output);
-        if (\array_key_exists('log', $options)) {
-            parent::$writeNow = $options['log'];
-        }
-        if (\array_key_exists('display', $options)) {
-            parent::$display = $options['display'];
-        }
+    public function __construct(
+        private Stopwatch $stopwatch
+    ) {
+        $this->stopwatch = $stopwatch;
     }
 
-    public static function watch($text = 'Watch Timer', $var = null)
+    public function start()
     {
-        $caller = Debug::CallingFunctionName();
-
-        $text = str_pad($text, 18, ' ');
-        $text = UtmLog::formatPrint($text, ['blue']);
-        $logText = $caller.'::'.$text;
-        parent::dump($logText, $var);
+        $this->stopwatch->start('export-data');
     }
 
-    public static function startLap($text = 'lap', $_ = '')
+    public function watch()
     {
-        $caller = Debug::CallingFunctionName();
-        $text = trim(UtmLog::formatPrint($text, ['blue']));
-        $logText = $caller.'::'.$text;
-        parent::lap($logText, null);
-    }
-
-    public static function watchlap($text = 'lap', $var = null)
-    {
-        $text = trim(UtmLog::formatPrint($text, ['cyan']));
-        $logText = "\t".$text;
-        parent::lap($logText, $var);
-    }
-
-    public static function stopwatch($text = 'stop', $var = null)
-    {
-        parent::stop($text, $var);
+        // ...
+        return (string) $this->stopwatch->getEvent('export-data'); // dumps e.g. '4.50 MiB - 26 ms'
     }
 }

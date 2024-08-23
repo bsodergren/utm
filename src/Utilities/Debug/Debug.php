@@ -1,6 +1,6 @@
 <?php
 /**
- *  Plexweb.
+ * Command like Metatag writer for video files.
  */
 
 namespace UTM\Utilities\Debug;
@@ -83,8 +83,11 @@ class Debug
     public static function info(mixed ...$vars)
     {
         $info = self::getMethod();
+        $currentKey = false;
 
-        $currentKey = self::findTextByValueInArray(self::$DebugArray, $info['file']);
+        if (null !== $info) {
+            $currentKey = self::findTextByValueInArray(self::$DebugArray, $info['file']);
+        }
 
         if (false !== $currentKey) {
             $currentValue = self::$DebugArray[$currentKey]['arguments'];
@@ -118,7 +121,7 @@ class Debug
             $string = $row.':';
             foreach ($data as $key => $val) {
                 if ('arguments' == $key) {
-                    continue;
+                    // continue;
                 }
                 if (is_array($val)) {
                     // $val = print_r($val, 1);
@@ -239,6 +242,14 @@ class Debug
         return $arguments;
     }
 
+    public static function cleanTime($time)
+    {
+        $find = 'default/export-data: ';
+        $replace = '';
+
+        return str_replace($find, $replace, $time);
+    }
+
     public static function getMethod()
     {
         $root = self::rootPath();
@@ -246,9 +257,15 @@ class Debug
         $trace = debug_backtrace();
         $class = '';
         $arg = [];
-
+        // utmdump($trace);
         for ($i = 0; $i < \count($trace); ++$i) {
-            if (str_contains($trace[$i]['file'], 'vendor')) {
+            if (array_key_exists('file', $trace[$i])) {
+                if (str_contains($trace[$i]['file'], 'vendor')) {
+                    continue;
+                }
+                // continue;
+            }
+            if (str_contains($trace[$i]['function'], 'utmshutdown')) {
                 continue;
             }
 
@@ -267,10 +284,14 @@ class Debug
                 }
 
                 $arguments = self::cleanArgs($args);
+                $timer = self::cleanTime(TimerNow());
 
                 $calledFile = str_replace($root, '', $calledFile);
 
-                return ['file' => $calledFile.'::'.$calledLine, 'method' => $class.$function, 'arguments' => $arguments];
+                return ['file' => $calledFile.'::'.$calledLine,
+                    'method' => $class.$function,
+                    'time' => $timer,
+                    'arguments' => $arguments];
             }
         }
     }

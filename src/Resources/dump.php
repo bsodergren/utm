@@ -78,7 +78,7 @@ if (!function_exists('Utmdd')) {
 if (!function_exists('utminfo')) {
     function utminfo(mixed ...$vars)
     {
-        Debug::info(TimerNow(), $vars);
+        Debug::info($vars);
     }
 }
 if (!function_exists('utmddump')) {
@@ -91,7 +91,7 @@ if (!function_exists('utmddump')) {
 if (!function_exists('utmshutdown')) {
     function utmshutdown($file = null)
     {
-        Debug::info(TimerNow());
+        Debug::info();
         if (null === $file) {
             Debug::ddump();
         } else {
