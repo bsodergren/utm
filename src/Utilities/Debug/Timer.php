@@ -13,7 +13,7 @@ class Timer
     public static $logProc = false;
 
     public function __construct(
-        private Stopwatch $stopwatch
+        private Stopwatch $stopwatch,
     ) {
         $this->stopwatch = $stopwatch;
     }
