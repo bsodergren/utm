@@ -24,7 +24,7 @@
         }
     ],
 	"autoload": {
-        "files": [ "src/Resources/dump.php","src/Resources/Options.php" ],
+        "files": [ "src/Resources/timer.php","src/Resources/dump.php","src/Resources/Options.php" ],
 
         "psr-4": {
 

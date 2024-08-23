@@ -10,6 +10,7 @@ use UTM\Bundle\Monolog\UTMLog;
 class Debug
 {
     public static $AppRootDir;
+    public static $AppTraceDir;
     public static $DebugArray = [];
 
     private static $padding = [
@@ -53,6 +54,10 @@ class Debug
             $string = print_r($string, 1);
         }
         $file = self::rootPath($name);
+
+        if (null !== self::$AppTraceDir) {
+            $file = self::$AppTraceDir.DIRECTORY_SEPARATOR.$name;
+        }
 
         $fp = fopen($file, 'a+');
         fwrite($fp, $string.\PHP_EOL);
