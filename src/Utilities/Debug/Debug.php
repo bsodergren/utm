@@ -186,7 +186,12 @@ class Debug
 
     public static function getMethod()
     {
-        $root = \dirname(realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']), 1);
+        if (array_key_exists('CONTEXT_DOCUMENT_ROOT', $_SERVER)) {
+            $rootpath = $_SERVER['CONTEXT_DOCUMENT_ROOT'];
+        } else {
+            $rootpath = $_SERVER['SCRIPT_FILENAME'];
+        }
+        $root = \dirname(realpath($rootpath), 1);
 
         $trace = debug_backtrace();
         $class = '';
