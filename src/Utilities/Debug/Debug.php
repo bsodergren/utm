@@ -92,6 +92,7 @@ class Debug
     public static function debug(mixed ...$vars)
     {
         $info = self::getMethod();
+
         // $currentKey = false;
 
         if (null !== $info) {
@@ -107,7 +108,7 @@ class Debug
             //         self::$InfoArray[$currentKey]['arguments'][] = $info['arguments'];
             //     }
             // } else {
-            self::$DebugArray[] = [$info=>$vars];
+            self::$DebugArray[] = ["info"=>$info,"Args"=>$vars];
             // }
         }
         // self::$InfoArray[] = ['page' => $caller, 'Data' => $var];
@@ -132,38 +133,42 @@ class Debug
             //         self::$InfoArray[$currentKey]['arguments'][] = $info['arguments'];
             //     }
             // } else {
-            self::$InfoArray[] = $info;
+            self::$InfoArray[] = ["info"=>$info,"Args"=>$vars];
             // }
         }
         // self::$InfoArray[] = ['page' => $caller, 'Data' => $var];
     }
 
-    public static function ddump()
+    public static function ddump($array)
     {
-        utmdump(self::$InfoArray);
+        utmdump($array);
     }
 
     public static function writedump($value, $file)
     {
         $filename = self::traceFile($file);
         if (file_exists($filename)) {
-            unlink($filename);
+            $string = str_repeat("_", 36);
+            self::file_append_file($string, $filename);
+            //unlink($filename);
         }
+
+        //  utmdd($value);
         foreach ($value as $row => $data) {
-            foreach ($data as $key => $val) {
-                if (is_array($val)) {
-                    // $val = print_r($val, 1);
-                    $val = self::cleanArgs($val);
-                    // $val = 'array';
-                }
+            foreach ($data['info'] as $key => $val) {
+
                 if ('arguments' == $key) {
+
                     $args = $val;
                 }
                 if ('file' == $key) {
-                    $file = $val;
+                    $file_a = explode("::", $val);
+                    $file   = $file_a[0];
+                    $line   = $file_a[1];
                 }
                 if ('method' == $key) {
-                    $method = $val;
+                    $funs   = explode(":", $val);
+                    $method = $funs[1];
                 }
                 if ('time' == $key) {
                     $time = $val;
@@ -172,7 +177,12 @@ class Debug
 
                 // utmdump([$row=>[$key,$val]]);
             }
-            $string = '[' . $row . '][' . $time . '][' . $file . '][' . $method . ']' . $args . '';
+            if (is_array($data['Args'])) {
+                // $val = print_r($val, 1);
+                $args = self::cleanArgs($data['Args']);
+                // $val = 'array';
+            }
+            $string = '[' . $row . '][' . $time . '][' . $file . ':' . $method . ':' . $line . ']' . $args;
             self::file_append_file($string, $filename);
         }
     }
@@ -262,6 +272,11 @@ class Debug
 
     private static function cleanArgs($args)
     {
+        //         if(is_array($args)) {
+        // if( array_key_exists(0,$args))
+        // {
+        //     $args = $args[0];
+        // }}
         $arguments = (new PrettyArray())->print($args, 1);
 
         // self::file_append_file($arguments,"artlist.txt");
@@ -313,7 +328,8 @@ class Debug
                 continue;
             }
 
-            if (str_contains($trace[$i]['function'], 'utminfo')) {
+            if (str_contains($trace[$i]['function'], 'utminfo')
+            || str_contains($trace[$i]['function'], 'utmdebug')) {
                 $calledFile = $trace[$i]['file'];
                 $calledLine = $trace[$i]['line'];
                 $function   = $trace[$i]['function'];
@@ -335,7 +351,8 @@ class Debug
                 return ['file'  => $calledFile . '::' . $calledLine,
                     'method'    => $class . $function,
                     'time'      => $timer,
-                    'arguments' => $arguments];
+                    // 'arguments' => $arguments
+                ];
             }
         }
     }

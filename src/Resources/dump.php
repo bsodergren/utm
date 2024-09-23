@@ -87,7 +87,7 @@ if (!function_exists('utminfo')) {
 if (!function_exists('utmdebug')) {
     function utmdebug(mixed ...$vars)
     {
-        Debug::utmdebug($vars);
+        Debug::debug($vars);
     }
 }
 
@@ -99,19 +99,21 @@ if (!function_exists('utmddump')) {
 }
 
 if (!function_exists('utmshutdown')) {
-    function utmshutdown($type = 'info', $file = null)
+    function utmshutdown($type = 'info')
     {
-        Debug::info();
-
         if ($type == 'info') {
             $array = Debug::$InfoArray;
-        } else {
-            $array = Debug::$DebugArray;
-        }
-        if (null === $file) {
-            Debug::ddump();
-        } else {
+            $file = __SCRIPT_NAME__.'_trace.log';
             Debug::writedump($array, $file);
+        } elseif ($type == 'debug'){
+            $array = Debug::$DebugArray;
+            $file = __SCRIPT_NAME__.'_debug.log';
+            Debug::writedump($array, $file);
+
+        } elseif($type == 'print'){
+            Debug::ddump(Debug::$DebugArray);
         }
+
+
     }
 }
