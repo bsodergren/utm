@@ -1,8 +1,6 @@
 <?php
 /**
- *
- *   Plexweb
- *
+ * Command like Metatag writer for video files.
  */
 
 namespace UTM\Utilities\Debug;
@@ -189,16 +187,16 @@ class Debug
     public static function writedump($value, $LogFile=null)
     {
 
-            $filename = self::traceFile($LogFile);
-            if (file_exists($filename)) {
-                $string = str_repeat("_", 36);
-                self::file_append_file($string, $filename);
-                //unlink($filename);
-            }
-            foreach (self::getDumpInfo($value, true) as $string) {
-                self::file_append_file($string, $filename);
-            }
-        
+        $filename = self::traceFile($LogFile);
+        if (file_exists($filename)) {
+            unlink($filename);
+            $string = str_repeat("_", 36);
+            self::file_append_file($string, $filename);
+        }
+        foreach (self::getDumpInfo($value, true) as $string) {
+            self::file_append_file($string, $filename);
+        }
+
 
     }
 
