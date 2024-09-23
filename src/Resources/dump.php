@@ -1,6 +1,8 @@
 <?php
 /**
- * Command like Metatag writer for video files.
+ *
+ *   Plexweb
+ *
  */
 
 use Symfony\Component\VarDumper\Caster\ScalarStub;
@@ -81,6 +83,14 @@ if (!function_exists('utminfo')) {
         Debug::info($vars);
     }
 }
+
+if (!function_exists('utmdebug')) {
+    function utmdebug(mixed ...$vars)
+    {
+        Debug::utmdebug($vars);
+    }
+}
+
 if (!function_exists('utmddump')) {
     function utmddump()
     {
@@ -89,13 +99,19 @@ if (!function_exists('utmddump')) {
 }
 
 if (!function_exists('utmshutdown')) {
-    function utmshutdown($file = null)
+    function utmshutdown($type = 'info', $file = null)
     {
         Debug::info();
+
+        if ($type == 'info') {
+            $array = Debug::$InfoArray;
+        } else {
+            $array = Debug::$DebugArray;
+        }
         if (null === $file) {
             Debug::ddump();
         } else {
-            Debug::writedump($file);
+            Debug::writedump($array, $file);
         }
     }
 }

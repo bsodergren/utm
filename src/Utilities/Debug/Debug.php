@@ -1,18 +1,20 @@
 <?php
 /**
- * Command like Metatag writer for video files.
+ *
+ *   Plexweb
+ *
  */
 
 namespace UTM\Utilities\Debug;
 
 use Nette\Utils\FileSystem;
-
 use UTM\Bundle\Monolog\UTMLog;
 
 class Debug
 {
     public static $AppRootDir;
     public static $AppTraceDir;
+    public static $InfoArray  = [];
     public static $DebugArray = [];
 
     private static $padding   = [
@@ -87,42 +89,67 @@ class Debug
         return false;
     }
 
+    public static function debug(mixed ...$vars)
+    {
+        $info = self::getMethod();
+        // $currentKey = false;
+
+        if (null !== $info) {
+            // $currentKey = self::findTextByValueInArray(self::$InfoArray, $info['file']);
+
+            // if (false !== $currentKey) {
+            //     $currentValue = self::$InfoArray[$currentKey]['arguments'];
+
+            //     if (\is_string($currentValue)) {
+            //         unset(self::$InfoArray[$currentKey]['arguments']);
+            //         self::$InfoArray[$currentKey]['arguments'] = [$currentValue, $info['arguments']];
+            //     } else {
+            //         self::$InfoArray[$currentKey]['arguments'][] = $info['arguments'];
+            //     }
+            // } else {
+            self::$DebugArray[] = [$info=>$vars];
+            // }
+        }
+        // self::$InfoArray[] = ['page' => $caller, 'Data' => $var];
+    }
+
+
     public static function info(mixed ...$vars)
     {
         $info = self::getMethod();
         // $currentKey = false;
 
         if (null !== $info) {
-            // $currentKey = self::findTextByValueInArray(self::$DebugArray, $info['file']);
+            // $currentKey = self::findTextByValueInArray(self::$InfoArray, $info['file']);
 
             // if (false !== $currentKey) {
-            //     $currentValue = self::$DebugArray[$currentKey]['arguments'];
+            //     $currentValue = self::$InfoArray[$currentKey]['arguments'];
 
             //     if (\is_string($currentValue)) {
-            //         unset(self::$DebugArray[$currentKey]['arguments']);
-            //         self::$DebugArray[$currentKey]['arguments'] = [$currentValue, $info['arguments']];
+            //         unset(self::$InfoArray[$currentKey]['arguments']);
+            //         self::$InfoArray[$currentKey]['arguments'] = [$currentValue, $info['arguments']];
             //     } else {
-            //         self::$DebugArray[$currentKey]['arguments'][] = $info['arguments'];
+            //         self::$InfoArray[$currentKey]['arguments'][] = $info['arguments'];
             //     }
             // } else {
-            self::$DebugArray[] = $info;
+            self::$InfoArray[] = $info;
             // }
         }
-        // self::$DebugArray[] = ['page' => $caller, 'Data' => $var];
+        // self::$InfoArray[] = ['page' => $caller, 'Data' => $var];
     }
 
     public static function ddump()
     {
-        utmdump(self::$DebugArray);
+        utmdump(self::$InfoArray);
     }
 
-    public static function writedump($file)
+    public static function writedump($value, $file)
     {
         $filename = self::traceFile($file);
         if (file_exists($filename)) {
             unlink($filename);
         }
-        foreach (self::$DebugArray as $row => $data) {
+        foreach ($value as $row => $data) {
             foreach ($data as $key => $val) {
                 if (is_array($val)) {
                     // $val = print_r($val, 1);
