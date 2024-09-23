@@ -147,7 +147,6 @@ class Debug
         foreach ($value as $row => $data) {
 
             foreach ($data['info'] as $key => $val) {
-
                 if ('file' == $key) {
 
                     $file_a = explode("::", $val);
@@ -157,7 +156,11 @@ class Debug
                 }
                 if ('method' == $key) {
                     $funs   = explode(":", $val);
-                    $method = self::colorstring($funs[1], 'red', $colors);
+
+                    $method = '';
+                    if (array_key_exists(1, $funs)) {
+                        $method = self::colorstring($funs[1], 'red', $colors);
+                    }
 
                 }
                 if ('time' == $key) {
