@@ -31,7 +31,11 @@ class Debug
         'function' => ['blue'],
         'line'     => ['green'],
     ];
-
+    /**
+     * Summary of traceFile
+     * @param mixed $filename
+     * @return string
+     */
     private static function traceFile($filename)
     {
         $root      = self::rootPath();
@@ -74,21 +78,21 @@ class Debug
         fclose($fp);
     }
 
-    public static function findTextByValueInArray($fooArray, $searchValue)
-    {
-        // self::file_append_file("---------------------------------------------------------",'arrayItems.txt');
+    // public static function findTextByValueInArray($fooArray, $searchValue)
+    // {
+    //     // self::file_append_file("---------------------------------------------------------",'arrayItems.txt');
 
-        // self::file_append_file($searchValue,'arrayItems.txt');
-        foreach ($fooArray as $index => $bar) {
-            // self::file_append_file($bar['file'],'arrayItems.txt');
-            if ($bar['file'] == $searchValue) {
-                // self::file_append_file("MATCHED AT ".$index,'arrayItems.txt');
-                return $index; // ['text'];
-            }
-        }
+    //     // self::file_append_file($searchValue,'arrayItems.txt');
+    //     foreach ($fooArray as $index => $bar) {
+    //         // self::file_append_file($bar['file'],'arrayItems.txt');
+    //         if ($bar['file'] == $searchValue) {
+    //             // self::file_append_file("MATCHED AT ".$index,'arrayItems.txt');
+    //             return $index; // ['text'];
+    //         }
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
     public static function __callStatic($name, $arguments)
     {
@@ -117,11 +121,11 @@ class Debug
     }
     public static function print_info($array)
     {
-        self::writedump($array);
+        self::printDump($array);
     }
     public static function print_debug($array)
     {
-        self::writedump($array);
+        self::printDump($array);
     }
     public static function write_info($array)
     {
@@ -141,7 +145,7 @@ class Debug
     }
     private static function getDumpInfo($value, $colors = false)
     {
-
+        $print_args = [];
         foreach ($value as $row => $data) {
 
             foreach ($data['info'] as $key => $val) {
@@ -185,10 +189,6 @@ class Debug
     public static function writedump($value, $LogFile=null)
     {
 
-        if ($LogFile === null) {
-            self::printDump($value);
-
-        } else {
             $filename = self::traceFile($LogFile);
             if (file_exists($filename)) {
                 $string = str_repeat("_", 36);
@@ -198,17 +198,17 @@ class Debug
             foreach (self::getDumpInfo($value, true) as $string) {
                 self::file_append_file($string, $filename);
             }
-        }
+        
 
     }
 
-    public static function print_array($array, $die = 0)
-    {
-        print_r($array);
-        if (1 == $die) {
-            exit(\PHP_EOL);
-        }
-    }
+    // public static function print_array($array, $die = 0)
+    // {
+    //     print_r($array);
+    //     if (1 == $die) {
+    //         exit(\PHP_EOL);
+    //     }
+    // }
 
     public static function tracePath()
     {
@@ -375,56 +375,56 @@ class Debug
         }
     }
 
-    public static function CallingFunctionName()
-    {
-        $trace      = debug_backtrace();
-        $TraceList  = '';
+    // public static function CallingFunctionName()
+    // {
+    //     $trace      = debug_backtrace();
+    //     $TraceList  = '';
 
-        $class      = str_pad('', self::$padding['class'], ' ');
-        $calledFile = str_pad('', self::$padding['file'], ' ');
-        $calledLine = str_pad('', self::$padding['line'], ' ');
-        $function   = str_pad('', self::$padding['function'], ' ');
+    //     $class      = str_pad('', self::$padding['class'], ' ');
+    //     $calledFile = str_pad('', self::$padding['file'], ' ');
+    //     $calledLine = str_pad('', self::$padding['line'], ' ');
+    //     $function   = str_pad('', self::$padding['function'], ' ');
 
-        foreach ($trace as $key => $row) {
-            if (\array_key_exists('class', $row)) {
-                if (str_contains($row['class'], 'Debug')) {
-                    continue;
-                }
-                if (str_contains($row['class'], 'Monolog')) {
-                    if (str_contains($row['function'], 'logger')) {
-                        $calledFile = self::returnTrace('file', $row);
-                        $calledLine = self::returnTrace('line', $row);
-                    }
-                    if (str_contains($row['function'], 'trace')) {
-                        $calledFile = self::returnTrace('file', $row);
-                        $calledLine = self::returnTrace('line', $row);
-                    }
-                    if (str_contains($row['function'], 'LogStart')) {
-                        $calledFile = self::returnTrace('file', $row);
-                        $calledLine = self::returnTrace('line', $row);
-                        $TraceList  = $calledFile . ':' . $calledLine;
-                        break;
-                    }
-                    continue;
-                }
-                if ('' != $row['class']) {
-                    $class = self::returnTrace('class', $row);
-                }
-            }
-            if (str_contains($row['function'], 'require')) {
-                continue;
-            }
-            if ($row['function']) {
-                $function = self::returnTrace('function', $row);
-            }
+    //     foreach ($trace as $key => $row) {
+    //         if (\array_key_exists('class', $row)) {
+    //             if (str_contains($row['class'], 'Debug')) {
+    //                 continue;
+    //             }
+    //             if (str_contains($row['class'], 'Monolog')) {
+    //                 if (str_contains($row['function'], 'logger')) {
+    //                     $calledFile = self::returnTrace('file', $row);
+    //                     $calledLine = self::returnTrace('line', $row);
+    //                 }
+    //                 if (str_contains($row['function'], 'trace')) {
+    //                     $calledFile = self::returnTrace('file', $row);
+    //                     $calledLine = self::returnTrace('line', $row);
+    //                 }
+    //                 if (str_contains($row['function'], 'LogStart')) {
+    //                     $calledFile = self::returnTrace('file', $row);
+    //                     $calledLine = self::returnTrace('line', $row);
+    //                     $TraceList  = $calledFile . ':' . $calledLine;
+    //                     break;
+    //                 }
+    //                 continue;
+    //             }
+    //             if ('' != $row['class']) {
+    //                 $class = self::returnTrace('class', $row);
+    //             }
+    //         }
+    //         if (str_contains($row['function'], 'require')) {
+    //             continue;
+    //         }
+    //         if ($row['function']) {
+    //             $function = self::returnTrace('function', $row);
+    //         }
 
-            $TraceList = $calledFile . ':' . $class . ':' . $function . ':' . $calledLine;
-            break;
-        }
-        //  $TraceList = str_pad($TraceList, 100, '.');
+    //         $TraceList = $calledFile . ':' . $class . ':' . $function . ':' . $calledLine;
+    //         break;
+    //     }
+    //     //  $TraceList = str_pad($TraceList, 100, '.');
 
-        return $TraceList;
-    }
+    //     return $TraceList;
+    // }
 
     private static function getClassPath($class, $level = 1)
     {
