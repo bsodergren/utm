@@ -132,20 +132,10 @@ class Debug
         self::writedump($array, __SCRIPT_NAME__ . '_debug.log');
     }
 
-
-
-
-
-
-
-    // public static function ddump($array)
-    // {
-    //     utmdump($array);
-    // }
     private static function colorString($string, $color, $useColor= false)
     {
         if ($useColor === true) {
-            return Colors::colorstring($string, $color);
+            return (new Colors())->getColoredString($string, $color);
         }
         return $string;
     }

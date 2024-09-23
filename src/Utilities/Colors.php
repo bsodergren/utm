@@ -104,5 +104,7 @@ class Colors
         return array_keys($this->background_colors);
     } //end getBackgroundColors()
 
-
+    public static function colorstring($string,$fg_color=null,$background_color=null){
+        return (new Colors())->getColoredString($string,$fg_color,$background_color);
+    }
 } //end class
