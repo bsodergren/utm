@@ -19,7 +19,7 @@ class Debug
     private static $padding   = [
         'file'     => 20,
         'class'    => 22,
-        'function' => 16,
+        'method'   => 20,
         'line'     => 4,
     ];
 
@@ -60,7 +60,6 @@ class Debug
         }
 
         $root = \dirname(realpath($root), 1) . DIRECTORY_SEPARATOR;
-
         return $root;
     }
 
@@ -69,6 +68,7 @@ class Debug
         if (\is_array($string)) {
             $string = print_r($string, 1);
         }
+
         $file = self::traceFile($name);
 
         $fp   = fopen($file, 'a+');
@@ -141,7 +141,7 @@ class Debug
         }
         return $string;
     }
-    private static function getDumpInfo($value, $colors = false)
+    private static function getDumpInfo($value, $colors = true)
     {
         $print_args = [];
         foreach ($value as $row => $data) {
@@ -149,14 +149,16 @@ class Debug
             foreach ($data['info'] as $key => $val) {
 
                 if ('file' == $key) {
-                    $file_a = explode("::", $val);
-                    $file   =  self::colorString($file_a[0], 'yellow', $colors);
-                    $line   =  self::colorString($file_a[1], 'green', $colors);
 
+                    $file_a = explode("::", $val);
+                    $file   =  self::colorString(basename($file_a[0]), 'blue', $colors);
+                    $file   =  self::colorString(dirname($file_a[0]) . DIRECTORY_SEPARATOR, 'yellow', $colors) . $file;
+                    $line   =  self::colorString($file_a[1], 'green', $colors);
                 }
                 if ('method' == $key) {
                     $funs   = explode(":", $val);
                     $method = self::colorstring($funs[1], 'red', $colors);
+
                 }
                 if ('time' == $key) {
                     $time = self::colorstring($val, 'light_blue', $colors);
@@ -167,9 +169,9 @@ class Debug
                 $args = self::cleanArgs($data['Args']);
             }
 
-            $string       = '[' . $row . ']' . '[' . $time . '][' . $file . ':' . $method . ':' . $line . ']' . PHP_EOL . $args;
-
-            $print_args[] = $string;
+            $string           = implode(":", [$row ,$time ,$file , $method , $line]);
+            $string           =  $string . '||' . $args;
+            $print_args[$row] = $string;
 
         }
 
@@ -178,7 +180,15 @@ class Debug
 
     public static function printDump($value)
     {
-        $print = implode("\n", self::getDumpInfo($value, false));
+        foreach (self::getDumpInfo($value, false) as $line) {
+            $line    = str_replace(" ", "", $line);
+            $line    = str_replace("\n", "", $line);
+            $line    = str_replace("||", "\n   ", $line);
+
+            $lines[] = $line . PHP_EOL;
+        }
+
+        $print = implode("\n", $lines);
         utmdump($print);
     }
 
@@ -188,14 +198,21 @@ class Debug
     {
 
         $filename = self::traceFile($LogFile);
+
         if (file_exists($filename)) {
             unlink($filename);
-            $string = str_repeat("_", 36);
-            self::file_append_file($string, $filename);
+            $newstring = str_repeat("_", 80);
+            $newstring = $newstring . PHP_EOL . str_repeat("_", 80);
+            self::file_append_file($newstring, $filename);
+            //
         }
+
         foreach (self::getDumpInfo($value, true) as $string) {
+            $string = str_replace("||", "\n", $string);
+
             self::file_append_file($string, $filename);
         }
+
 
 
     }
@@ -340,7 +357,7 @@ class Debug
                 return ['file'  => '',
                     'method'    => 'utmshutdown',
                     'time'      => self::cleanTime(TimerNow()),
-                    'arguments' => ''];
+                ];
                 continue;
             }
 
