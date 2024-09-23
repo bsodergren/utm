@@ -99,21 +99,25 @@ if (!function_exists('utmddump')) {
 }
 
 if (!function_exists('utmshutdown')) {
-    function utmshutdown($type = 'info')
+    function utmshutdown($options = ['print'=>'info'])
     {
-        if ($type == 'info') {
-            $array = Debug::$InfoArray;
-            $file = __SCRIPT_NAME__.'_trace.log';
-            Debug::writedump($array, $file);
-        } elseif ($type == 'debug'){
-            $array = Debug::$DebugArray;
-            $file = __SCRIPT_NAME__.'_debug.log';
-            Debug::writedump($array, $file);
-
-        } elseif($type == 'print'){
-            Debug::ddump(Debug::$DebugArray);
+        foreach ($options as $cmd => $type) {
+            if (is_array($type)) {
+                foreach ($type as $subcmd) {
+                    $method[] = $cmd . "_" . $subcmd;
+                }
+            } else {
+                $method[] = $cmd . "_" . $type;
+            }
         }
 
+        foreach ($method as $classMethod) {
+            if (str_contains($classMethod, 'info')) {
+                call_user_func(["UTM\Utilities\Debug\Debug",$classMethod], Debug::$InfoArray);
+            } elseif (str_contains($classMethod, 'debug')) {
+                call_user_func(["UTM\Utilities\Debug\Debug",$classMethod], Debug::$DebugArray);
+            }
+        }
 
     }
 }

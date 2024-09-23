@@ -7,6 +7,7 @@
 
 namespace UTM\Utilities\Debug;
 
+use UTM\Utilities\Colors;
 use Nette\Utils\FileSystem;
 use UTM\Bundle\Monolog\UTMLog;
 
@@ -89,102 +90,126 @@ class Debug
         return false;
     }
 
-    public static function debug(mixed ...$vars)
+    public static function __callStatic($name, $arguments)
     {
-        $info = self::getMethod();
+        $info               = self::getMethod();
+        if ($info !== null) {
+            if ($name == 'debug') {
 
-        // $currentKey = false;
+                self::$DebugArray[] = ["info"=>$info,"Args"=>$arguments];
+            } elseif ($name == 'info') {
 
-        if (null !== $info) {
-            // $currentKey = self::findTextByValueInArray(self::$InfoArray, $info['file']);
+                self::$InfoArray[] = ["info"=>$info,"Args"=>$arguments];
 
-            // if (false !== $currentKey) {
-            //     $currentValue = self::$InfoArray[$currentKey]['arguments'];
+            }
+            return 0;
 
-            //     if (\is_string($currentValue)) {
-            //         unset(self::$InfoArray[$currentKey]['arguments']);
-            //         self::$InfoArray[$currentKey]['arguments'] = [$currentValue, $info['arguments']];
-            //     } else {
-            //         self::$InfoArray[$currentKey]['arguments'][] = $info['arguments'];
-            //     }
-            // } else {
-            self::$DebugArray[] = ["info"=>$info,"Args"=>$vars];
-            // }
         }
-        // self::$InfoArray[] = ['page' => $caller, 'Data' => $var];
+
+        if ($name == 'ddump') {
+            utmdump($arguments);
+            return 0;
+        }
+
+
+
+
+    }
+    public static function print_info($array)
+    {
+        self::writedump($array);
+    }
+    public static function print_debug($array)
+    {
+        self::writedump($array);
+    }
+    public static function write_info($array)
+    {
+        self::writedump($array, __SCRIPT_NAME__ . '_trace.log');
+    }
+    public static function write_debug($array)
+    {
+        self::writedump($array, __SCRIPT_NAME__ . '_debug.log');
     }
 
 
-    public static function info(mixed ...$vars)
+
+
+
+
+
+    // public static function ddump($array)
+    // {
+    //     utmdump($array);
+    // }
+    private static function colorString($string, $color, $useColor= false)
     {
-        $info = self::getMethod();
-        // $currentKey = false;
-
-        if (null !== $info) {
-            // $currentKey = self::findTextByValueInArray(self::$InfoArray, $info['file']);
-
-            // if (false !== $currentKey) {
-            //     $currentValue = self::$InfoArray[$currentKey]['arguments'];
-
-            //     if (\is_string($currentValue)) {
-            //         unset(self::$InfoArray[$currentKey]['arguments']);
-            //         self::$InfoArray[$currentKey]['arguments'] = [$currentValue, $info['arguments']];
-            //     } else {
-            //         self::$InfoArray[$currentKey]['arguments'][] = $info['arguments'];
-            //     }
-            // } else {
-            self::$InfoArray[] = ["info"=>$info,"Args"=>$vars];
-            // }
+        if ($useColor === true) {
+            return Colors::colorstring($string, $color);
         }
-        // self::$InfoArray[] = ['page' => $caller, 'Data' => $var];
+        return $string;
     }
-
-    public static function ddump($array)
+    private static function getDumpInfo($value, $colors = false)
     {
-        utmdump($array);
-    }
 
-    public static function writedump($value, $file)
-    {
-        $filename = self::traceFile($file);
-        if (file_exists($filename)) {
-            $string = str_repeat("_", 36);
-            self::file_append_file($string, $filename);
-            //unlink($filename);
-        }
-
-        //  utmdd($value);
         foreach ($value as $row => $data) {
+
             foreach ($data['info'] as $key => $val) {
 
-                if ('arguments' == $key) {
-
-                    $args = $val;
-                }
                 if ('file' == $key) {
                     $file_a = explode("::", $val);
-                    $file   = $file_a[0];
-                    $line   = $file_a[1];
+                    $file   =  self::colorString($file_a[0], 'yellow', $colors);
+                    $line   =  self::colorString($file_a[1], 'green', $colors);
+
                 }
                 if ('method' == $key) {
                     $funs   = explode(":", $val);
-                    $method = $funs[1];
+                    $method = self::colorstring($funs[1], 'red', $colors);
                 }
                 if ('time' == $key) {
-                    $time = $val;
+                    $time = self::colorstring($val, 'light_blue', $colors);
                 }
-                // $val = str_replace("\n","",$val);
+            }
 
-                // utmdump([$row=>[$key,$val]]);
-            }
             if (is_array($data['Args'])) {
-                // $val = print_r($val, 1);
                 $args = self::cleanArgs($data['Args']);
-                // $val = 'array';
             }
-            $string = '[' . $row . '][' . $time . '][' . $file . ':' . $method . ':' . $line . ']' . $args;
-            self::file_append_file($string, $filename);
+
+            $string       = '[' . $row . ']' . '[' . $time . '][' . $file . ':' . $method . ':' . $line . ']' . PHP_EOL . $args;
+
+            $print_args[] = $string;
+
         }
+
+        return $print_args;
+    }
+
+    public static function printDump($value)
+    {
+        $print = implode("\n", self::getDumpInfo($value, false));
+        utmdump($print);
+    }
+
+
+
+    public static function writedump($value, $LogFile=null)
+    {
+
+        if ($LogFile === null) {
+            self::printDump($value);
+
+        } else {
+            $filename = self::traceFile($LogFile);
+            if (file_exists($filename)) {
+                $string = str_repeat("_", 36);
+                self::file_append_file($string, $filename);
+                //unlink($filename);
+            }
+            foreach (self::getDumpInfo($value, true) as $string) {
+                self::file_append_file($string, $filename);
+            }
+        }
+
     }
 
     public static function print_array($array, $die = 0)
@@ -272,27 +297,30 @@ class Debug
 
     private static function cleanArgs($args)
     {
-        //         if(is_array($args)) {
-        // if( array_key_exists(0,$args))
-        // {
-        //     $args = $args[0];
-        // }}
-        $arguments = (new PrettyArray())->print($args, 1);
 
-        // self::file_append_file($arguments,"artlist.txt");
+        $arguments = (new PrettyArray())->print($args);
 
-        // $arguments    = str_replace(["\t", "\n"], '',   $arguments);
+        $lines     = [];
 
-        // return $arguments;
+        $argarray  = explode("\n", $arguments);
 
-        // $arguments    = str_replace(',]', ']', $arguments);
-        // // $arguments    = str_replace("[[","",$arguments);
+        foreach ($argarray as $line) {
+            if (!str_contains($line, '=>')) {
+                $line    = str_replace("[", "", $line);
+                $line    = str_replace("]", "", $line);
+                $line    = str_replace(",", "]", $line);
 
-        // if (str_contains($arguments, '=>')) {
-        //     $arguments    = str_replace('[[', "[[\n   ", $arguments);
-        //     $arguments    = str_replace("',", "'\n   ", $arguments);
-        //     $arguments    = str_replace(']]', "\n]]", $arguments);
-        // }
+            }
+
+            if ($line == "") {
+                continue;
+            }
+
+            $lines[] = $line;
+
+        }
+
+        $arguments = rtrim(implode("\n", $lines));
 
         return $arguments;
     }
