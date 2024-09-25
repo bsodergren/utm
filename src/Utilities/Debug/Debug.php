@@ -183,6 +183,7 @@ class Debug
 
     public static function printDump($value)
     {
+        $lines = [];
         foreach (self::getDumpInfo($value, false) as $line) {
             $line    = str_replace(" ", "", $line);
             $line    = str_replace("\n", "", $line);
