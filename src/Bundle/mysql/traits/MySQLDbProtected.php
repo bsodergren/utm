@@ -1,6 +1,7 @@
 <?php
 
 namespace UTM\Bundle\mysql\traits;
+use stdClass;
 
 trait MySQLDbProtected
 {
