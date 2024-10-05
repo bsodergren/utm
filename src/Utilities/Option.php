@@ -96,6 +96,7 @@ class Option extends InputOption
 
     private static function valueIsArray($value, $name)
     {
+        $ret = null;
         foreach ($value as $text) {
             if (str_contains($text, ',')) {
                 $textArray = explode(',', $text);
