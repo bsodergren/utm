@@ -5,6 +5,8 @@
 
 namespace UTM\Utilities;
 
+use Nette\Utils\FileSystem;
+
 class Utilities
 {
     public static function isTrue($define_name)
@@ -32,5 +34,29 @@ class Utilities
 
         $string_ret = str_replace(",", "", $string);
         return $string_ret;
+    }
+    public static function get_filelist($directory, $ext = 'log', $basename = false)
+    {
+        $files_array = [];
+
+        if (is_dir($directory)) {
+            $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory));
+            foreach ($rii as $file) {
+                if ($file->isDir()) {
+                    continue;
+                }
+                $filename = $file->getPathname();
+                $filename = FileSystem::normalizePath($filename);
+                if (preg_match('/(' . $ext . ')$/', $filename)) {
+                    if (true == $basename) {
+                        $files_array[] = basename($filename);
+                    } else {
+                        $files_array[] = $filename;
+                    }
+                }
+            }
+        }
+
+        return $files_array;
     }
 }

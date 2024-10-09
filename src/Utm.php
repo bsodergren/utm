@@ -15,6 +15,16 @@ class Utm
     public static $LOG_STYLE      = 'pretty';
     private static $logger;
 
+
+    public static $SQL_TABLE_DIR;
+    public static $SQL_UPDATE_DIR;
+
+    public static $SQL_TABLE_PREFIX;
+    public static $SQL_DATABASE;
+    public static $SQL_USERNAME;
+    public static $SQL_PASSWORD;
+    public static $SQL_HOSTNAME;
+
     public function __construct($logdir = null)
     {
         if (null !== $logdir) {
@@ -58,6 +68,21 @@ class Utm
             case 'log':
                 self::$logger->$method($args);
         }
+    }
+
+    public static function firstRun($dbType = 'mysql', $options=[])
+    {
+        self::$SQL_TABLE_DIR    = $options['table_dir'];
+        self::$SQL_UPDATE_DIR   = $options['update_dir'];
+        self::$SQL_TABLE_PREFIX = $options['prefix'];
+
+        self::$SQL_USERNAME     = $options['username'];
+        self::$SQL_PASSWORD     = $options['password'];
+        self::$SQL_HOSTNAME     = $options['hostname'];
+        self::$SQL_DATABASE     = $options['database'];
+
+
+
     }
 }
 // require_once __DIR__.'/Resources/Options.php';
