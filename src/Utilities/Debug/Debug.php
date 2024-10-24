@@ -100,10 +100,10 @@ class Debug
         if ($info !== null) {
             if ($name == 'debug') {
 
-                self::$DebugArray[] = ["info" => $info,"Args" => $arguments];
+                self::$DebugArray[] = ["info" => $info,"Args" => self::cleanObjectArg($arguments)];
             } elseif ($name == 'info') {
 
-                self::$InfoArray[] = ["info" => $info,"Args" => $arguments];
+                self::$InfoArray[] = ["info" => $info,"Args" => self::cleanObjectArg($arguments)];
 
             }
             return 0;
@@ -114,9 +114,35 @@ class Debug
             utmdump($arguments);
             return 0;
         }
+    }
 
 
+    private static function cleanObjectArg($args)
+    {
 
+
+        array_walk_recursive(
+            $args,
+            function (&$value) {
+                if (is_object($value)) {
+                    $value = ["Class" => get_class($value),"Properties" => get_class_vars(get_class($value))];
+                }
+            }
+        );
+
+        return $args;
+        // foreach($args as $arg){
+        //     utmdump($arg);
+        //     if(is_object($arg)){
+        //         $value = get_class($arg);
+
+        //     } else {
+        //         $value = $arg;
+        //     }
+        //     $argArray[] = $value;
+        // }
+
+        // return $argArray;
 
     }
     public static function print_info($array)
