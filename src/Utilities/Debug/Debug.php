@@ -13,6 +13,8 @@ class Debug
 {
     public static $AppRootDir;
     public static $AppTraceDir;
+
+    public static $PrettyLogs = true;
     public static $InfoArray  = [];
     public static $DebugArray = [];
 
@@ -98,10 +100,10 @@ class Debug
         if ($info !== null) {
             if ($name == 'debug') {
 
-                self::$DebugArray[] = ["info"=>$info,"Args"=>$arguments];
+                self::$DebugArray[] = ["info" => $info,"Args" => $arguments];
             } elseif ($name == 'info') {
 
-                self::$InfoArray[] = ["info"=>$info,"Args"=>$arguments];
+                self::$InfoArray[] = ["info" => $info,"Args" => $arguments];
 
             }
             return 0;
@@ -134,7 +136,7 @@ class Debug
         self::writedump($array, __SCRIPT_NAME__ . '_debug.log');
     }
 
-    private static function colorString($string, $color, $useColor= false)
+    private static function colorString($string, $color, $useColor = false)
     {
         if ($useColor === true) {
             return (new Colors())->getColoredString($string, $color);
@@ -198,7 +200,7 @@ class Debug
 
 
 
-    public static function writedump($value, $LogFile=null)
+    public static function writedump($value, $LogFile = null)
     {
 
         $filename = self::traceFile($LogFile);
@@ -211,7 +213,7 @@ class Debug
             //
         }
 
-        foreach (self::getDumpInfo($value, true) as $string) {
+        foreach (self::getDumpInfo($value, self::$PrettyLogs) as $string) {
             $string = str_replace("||", "\n", $string);
 
             self::file_append_file($string, $filename);
