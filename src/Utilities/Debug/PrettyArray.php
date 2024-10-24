@@ -104,7 +104,7 @@ final class PrettyArray
             return $this->resolverCallbacks[$type]($value);
         }
 
-        return \var_export($value, true);
+        return @\var_export($value, true);
     }
 
     /**
