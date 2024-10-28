@@ -1,11 +1,11 @@
-<?php 
-namespace UTM\Updater;
+<?php
+/**
+ * UTM Common classes
+ */
 
+namespace UTM\Updater;
 
 class UTMSetup
 {
-    public function __construct()
-    {
-        
-    }
+    public function __construct() {}
 }

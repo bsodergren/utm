@@ -1,15 +1,13 @@
 <?php
 /**
- *
- *   Plexweb
- *
+ * UTM Common classes
  */
 
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $fileHeaderComment = <<<'EOF'
-Command like Metatag writer for video files.
+UTM Common classes
 EOF;
 
 

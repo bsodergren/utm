@@ -1,6 +1,6 @@
 <?php
 /**
- * Command like Metatag writer for video files.
+ * UTM Common classes
  */
 
 namespace UTM\Utilities;

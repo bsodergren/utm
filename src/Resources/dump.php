@@ -1,8 +1,6 @@
 <?php
 /**
- *
- *   Plexweb
- *
+ * UTM Common classes
  */
 
 use Symfony\Component\VarDumper\Caster\ScalarStub;

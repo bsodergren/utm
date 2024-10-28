@@ -1,6 +1,6 @@
 <?php
 /**
- * Command like Metatag writer for video files.
+ * UTM Common classes
  */
 
 namespace UTM\Utilities\Debug;
@@ -15,18 +15,18 @@ class Debug
     public static $AppTraceDir;
     public static $RealTimeLog = false;
 
-    public static $PrettyLogs = true;
-    public static $InfoArray  = [];
-    public static $DebugArray = [];
+    public static $PrettyLogs  = true;
+    public static $InfoArray   = [];
+    public static $DebugArray  = [];
 
-    private static $padding   = [
+    private static $padding    = [
         'file'     => 20,
         'class'    => 22,
         'method'   => 20,
         'line'     => 4,
     ];
 
-    private static $color     = [
+    private static $color      = [
         'file'     => ['red'],
         'class'    => ['yellow'],
         'function' => ['blue'],
@@ -100,7 +100,7 @@ class Debug
         $info               = self::getMethod();
         if ($info !== null) {
 
-            $array = ["info" => $info,"Args" => self::cleanObjectArg($arguments)];
+            $array = ["info" => $info, "Args" => self::cleanObjectArg($arguments)];
             if ($name == 'debug') {
                 if (true === self::$RealTimeLog) {
                     self::writedump([$array], __SCRIPT_NAME__ . '_debug.log', false);
@@ -113,10 +113,8 @@ class Debug
                 } else {
                     self::$InfoArray[] = $array;
                 }
-
             }
             return 0;
-
         }
 
         if ($name == 'ddump') {
@@ -134,9 +132,9 @@ class Debug
             $args,
             function (&$value) {
                 if (is_object($value)) {
-                    $value = ["Class" => get_class($value),"Properties" => get_class_vars(get_class($value))];
+                    $value = ["Class" => get_class($value), "Properties" => get_class_vars(get_class($value))];
                 }
-            }
+            },
         );
 
         return $args;
@@ -198,7 +196,6 @@ class Debug
                     if (array_key_exists(1, $funs)) {
                         $method = self::colorstring($funs[1], 'red', $colors);
                     }
-
                 }
                 if ('time' == $key) {
                     $time = self::colorstring($val, 'light_blue', $colors);
@@ -209,10 +206,9 @@ class Debug
                 $args = self::cleanArgs($data['Args']);
             }
 
-            $string           = implode(":", [$row ,$time ,$file , $method , $line]);
+            $string           = implode(":", [$row, $time, $file, $method, $line]);
             $string           =  $string . '||' . $args;
             $print_args[$row] = $string;
-
         }
 
         return $print_args;
@@ -257,9 +253,6 @@ class Debug
 
             self::file_append_file($string, $filename);
         }
-
-
-
     }
 
     // public static function print_array($array, $die = 0)
@@ -322,9 +315,9 @@ class Debug
         if (\count($classArray) > 0) {
             $classArray = array_reverse($classArray);
             foreach ($classArray as $k => $classPath) {
-                [$class,$method] = explode(':', $classPath);
-                $class           = str_replace('\\', '_', $class);
-                $path[$class][]  = $method;
+                [$class, $method] = explode(':', $classPath);
+                $class            = str_replace('\\', '_', $class);
+                $path[$class][]   = $method;
             }
 
             foreach ($path as $classPath => $methods) {
@@ -359,7 +352,6 @@ class Debug
                 $line    = str_replace("[", "", $line);
                 $line    = str_replace("]", "", $line);
                 $line    = str_replace(",", "]", $line);
-
             }
 
             if ($line == "") {
@@ -367,7 +359,6 @@ class Debug
             }
 
             $lines[] = $line;
-
         }
 
         $arguments = rtrim(implode("\n", $lines));
@@ -399,15 +390,18 @@ class Debug
                 // continue;
             }
             if (str_contains($trace[$i]['function'], 'utmshutdown')) {
-                return ['file'  => '',
+                return [
+                    'file'      => '',
                     'method'    => 'utmshutdown',
                     'time'      => self::cleanTime(TimerNow()),
                 ];
                 continue;
             }
 
-            if (str_contains($trace[$i]['function'], 'utminfo')
-            || str_contains($trace[$i]['function'], 'utmdebug')) {
+            if (
+                str_contains($trace[$i]['function'], 'utminfo')
+                || str_contains($trace[$i]['function'], 'utmdebug')
+            ) {
                 $calledFile = $trace[$i]['file'];
                 $calledLine = $trace[$i]['line'];
                 $function   = $trace[$i]['function'];
@@ -426,7 +420,8 @@ class Debug
 
                 $calledFile = str_replace($root, '', $calledFile);
 
-                return ['file'  => $calledFile . '::' . $calledLine,
+                return [
+                    'file'      => $calledFile . '::' . $calledLine,
                     'method'    => $class . $function,
                     'time'      => $timer,
                     // 'arguments' => $arguments
