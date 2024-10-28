@@ -13,6 +13,7 @@ class Debug
 {
     public static $AppRootDir;
     public static $AppTraceDir;
+    public static $RealTimeLog = false;
 
     public static $PrettyLogs = true;
     public static $InfoArray  = [];
@@ -98,12 +99,20 @@ class Debug
     {
         $info               = self::getMethod();
         if ($info !== null) {
+
+            $array = ["info" => $info,"Args" => self::cleanObjectArg($arguments)];
             if ($name == 'debug') {
-
-                self::$DebugArray[] = ["info" => $info,"Args" => self::cleanObjectArg($arguments)];
+                if (true === self::$RealTimeLog) {
+                    self::writedump([$array], __SCRIPT_NAME__ . '_debug.log', false);
+                } else {
+                    self::$DebugArray[] = $array;
+                }
             } elseif ($name == 'info') {
-
-                self::$InfoArray[] = ["info" => $info,"Args" => self::cleanObjectArg($arguments)];
+                if (true === self::$RealTimeLog) {
+                    self::writedump([$array], __SCRIPT_NAME__ . '_trace.log', false);
+                } else {
+                    self::$InfoArray[] = $array;
+                }
 
             }
             return 0;
@@ -226,17 +235,21 @@ class Debug
 
 
 
-    public static function writedump($value, $LogFile = null)
+    public static function writedump($value, $LogFile = null, $rotate = true)
     {
 
         $filename = self::traceFile($LogFile);
 
+
         if (file_exists($filename)) {
-            unlink($filename);
+            if ($rotate === true) {
+                unlink($filename);
+            }
             $newstring = str_repeat("_", 80);
             $newstring = $newstring . PHP_EOL . str_repeat("_", 80);
             self::file_append_file($newstring, $filename);
             //
+
         }
 
         foreach (self::getDumpInfo($value, self::$PrettyLogs) as $string) {
