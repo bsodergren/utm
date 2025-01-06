@@ -31,6 +31,11 @@ class Option extends InputOption
         if (is_array($options)) {
             self::$options = array_merge(self::$options, $options);
         }
+        $argOptions =$input->getArguments();
+        if (is_array($argOptions)) {
+
+            self::$options = array_merge(self::$options, $argOptions);
+        }
     }
 
     public static function set($name, $value)
