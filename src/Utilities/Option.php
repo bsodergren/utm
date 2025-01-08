@@ -1,6 +1,6 @@
 <?php
 /**
- * UTM Common classes
+ * Command like Metatag writer for video files.
  */
 
 namespace UTM\Utilities;
@@ -28,13 +28,47 @@ class Option extends InputOption
             self::$options = $input->getOptions();
         }
 
-        if (is_array($options)) {
+        if (\is_array($options)) {
             self::$options = array_merge(self::$options, $options);
         }
-        $argOptions =$input->getArguments();
-        if (is_array($argOptions)) {
-
+        $argOptions = $input->getArguments();
+        if (\is_array($argOptions)) {
             self::$options = array_merge(self::$options, $argOptions);
+        }
+        if (\array_key_exists('options', self::$options)) {
+            $commandOptions = self::$options['options'];
+            $optArray       = [];
+            if (\count($commandOptions) > 0) {
+                foreach ($commandOptions as $Option) {
+                    if (str_contains($Option, ',')) {
+                        $optArray = array_merge($optArray, explode(',', $Option));
+                        continue;
+                    } else {
+                        if (\is_array($Option)) {
+                            $optArray = array_merge($optArray, $Option);
+                        } else {
+                            $optArray[] = $Option;
+                        }
+                    }
+                }
+
+                unset(self::$options['options']);
+            }
+            if (\count($optArray) > 0) {
+                foreach ($optArray as $string) {
+                    $pcs = explode('=', $string);
+
+                    if ('true' == $pcs[1]) {
+                        $pcs[1] = true;
+                    } elseif ('false' == $pcs[1]) {
+                        $pcs[1] = false;
+                    }
+
+                    self::set($pcs[0], $pcs[1]);
+                }
+
+                // utmdd('f');
+            }
         }
     }
 
@@ -64,22 +98,21 @@ class Option extends InputOption
         return self::$cmdOptions;
     }
 
-    public static function getValue($name, $return = false)
+    public static function getValue($name, $return = false, $default = null)
     {
-        $result = null;
+        $result = $default;
         if (\array_key_exists($name, self::$options)) {
             $value = self::$options[$name];
             if (!\is_array($value)) {
                 if (str_contains($value, ',')) {
                     $value  = explode(',', $value);
-                    $result = self::valueIsArray($value, $name);
+                    $result = self::valueIsArray($value, $name, [$default]);
                 } else {
-                    $result = self::valueIsString($value, $name);
+                    $result = self::valueIsString($value, $name, $default);
                 }
             } else {
-                $result = self::valueIsArray($value, $name);
+                $result = self::valueIsArray($value, $name, [$default]);
             }
-
             if (\is_array($result)) {
                 if (true == $return) {
                     $result = $result[0];
@@ -99,9 +132,9 @@ class Option extends InputOption
         return $text;
     }
 
-    private static function valueIsArray($value, $name)
+    private static function valueIsArray($value, $name, $default = [])
     {
-        $ret = null;
+        $ret = [];
         foreach ($value as $text) {
             if (str_contains($text, ',')) {
                 $textArray = explode(',', $text);
@@ -114,11 +147,14 @@ class Option extends InputOption
                 $ret[] = self::ispath($text, $name);
             }
         }
+        if (0 == \count($ret)) {
+            $ret = $default;
+        }
 
         return $ret;
     }
 
-    private static function valueIsString($value, $name)
+    private static function valueIsString($value, $name, $default = null)
     {
         return $value;
     }
@@ -132,8 +168,8 @@ class Option extends InputOption
 
     public static function isTrue($name)
     {
-        if (defined($name)) {
-            if (true == constant($name)) {
+        if (\defined($name)) {
+            if (true == \constant($name)) {
                 return true;
             } else {
                 return false;
@@ -143,6 +179,7 @@ class Option extends InputOption
         if (\is_bool($name)) {
             return $name;
         }
+
         if (\array_key_exists($name, self::$options)) {
             if (\is_array(self::$options[$name])) {
                 if (\count(self::$options[$name]) > 0) {
