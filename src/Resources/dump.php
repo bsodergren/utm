@@ -10,6 +10,10 @@ use UTM\Utm;
 
 function DumpServerExists()
 {
+      if(Utm::$SHOW_VAR_DUMP == false)
+        {
+        return false;
+    }
     $fp = @fsockopen('tcp://127.0.0.1', 9912, $errno, $errstr, 1);
     if ($fp) {
         return true;

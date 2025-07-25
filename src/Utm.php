@@ -11,6 +11,7 @@ use SaliBhdr\DumpLog\Factory\Logger;
 class Utm
 {
     public static $SHOW_HTML_DUMP = false;
+    public static $SHOW_VAR_DUMP = true;
     public static $LOG_DIR        = __DIR__ . '/logs';
     public static $LOG_STYLE      = 'pretty';
     private static $logger;
