@@ -52,7 +52,7 @@ class Utm
             $env_file = '.env-server';
         }
 
-        return Dotenv::createUnsafeImmutable($directory, $env_file)->load();
+        return Dotenv::createUnsafeImmutable($directory, $env_file);
     }
 
     public static function __callStatic($method, $args)

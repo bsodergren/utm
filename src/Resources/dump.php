@@ -10,8 +10,8 @@ use UTM\Utm;
 
 function DumpServerExists()
 {
-      if(Utm::$SHOW_VAR_DUMP == false)
-        {
+
+    if(isset($_ENV['VAR_DUMPER_FORMAT']) && $_ENV['VAR_DUMPER_FORMAT'] == "quiet"){
         return false;
     }
     $fp = @fsockopen('tcp://127.0.0.1', 9912, $errno, $errstr, 1);
