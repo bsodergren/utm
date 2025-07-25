@@ -1,6 +1,6 @@
 <?php
 /**
- * UTM Common classes
+ * Command like Metatag writer for video files.
  */
 
 use Symfony\Component\VarDumper\Caster\ScalarStub;
@@ -10,10 +10,10 @@ use UTM\Utm;
 
 function DumpServerExists()
 {
-
-    if(isset($_ENV['VAR_DUMPER_FORMAT']) && $_ENV['VAR_DUMPER_FORMAT'] == "quiet"){
+    if (isset($_ENV['VAR_DUMPER_FORMAT']) && 'quiet' == $_ENV['VAR_DUMPER_FORMAT']) {
         return false;
     }
+
     $fp = @fsockopen('tcp://127.0.0.1', 9912, $errno, $errstr, 1);
     if ($fp) {
         return true;
@@ -60,7 +60,7 @@ if (!function_exists('Utmdd')) {
     function Utmdd(mixed ...$vars): mixed
     {
         if (false == DumpServerExists()) {
-            return null;
+            exit(1);
         }
 
         if (!in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true) && !headers_sent()) {
@@ -106,20 +106,19 @@ if (!function_exists('utmshutdown')) {
         foreach ($options as $cmd => $type) {
             if (is_array($type)) {
                 foreach ($type as $subcmd) {
-                    $method[] = $cmd . "_" . $subcmd;
+                    $method[] = $cmd.'_'.$subcmd;
                 }
             } else {
-                $method[] = $cmd . "_" . $type;
+                $method[] = $cmd.'_'.$type;
             }
         }
 
         foreach ($method as $classMethod) {
             if (str_contains($classMethod, 'info')) {
-                call_user_func(["UTM\Utilities\Debug\Debug",$classMethod], Debug::$InfoArray);
+                call_user_func(["UTM\Utilities\Debug\Debug", $classMethod], Debug::$InfoArray);
             } elseif (str_contains($classMethod, 'debug')) {
-                call_user_func(["UTM\Utilities\Debug\Debug",$classMethod], Debug::$DebugArray);
+                call_user_func(["UTM\Utilities\Debug\Debug", $classMethod], Debug::$DebugArray);
             }
         }
-
     }
 }
