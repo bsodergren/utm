@@ -109,6 +109,7 @@ class Option extends InputOption
                     $result = self::valueIsArray($value, $name, [$default]);
                 } else {
                     $result = self::valueIsString($value, $name, $default);
+                    $result = ltrim($result, '=');
                 }
             } else {
                 $result = self::valueIsArray($value, $name, [$default]);
