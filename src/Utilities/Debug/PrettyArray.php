@@ -57,8 +57,8 @@ final class PrettyArray
         $indentChar  = ' ';
         $indentMulti = 2;
 
-        $indent      = \str_repeat($indentChar, $indentLevel * $indentMulti);
-        $entries     = [];
+        $indent  = \str_repeat($indentChar, $indentLevel * $indentMulti);
+        $entries = [];
 
         foreach ($data as $key => $value) {
             if (!\is_int($key)) {
@@ -79,10 +79,10 @@ final class PrettyArray
 
         $outerIndent = \str_repeat($indentChar, ($indentLevel - 1) * $indentMulti);
         if (count($entries) > 0) {
-            return \sprintf('[' . PHP_EOL . '%s' . PHP_EOL . '%s]', \implode(\PHP_EOL, $entries), $outerIndent);
+            return \sprintf(PHP_EOL . '[' . PHP_EOL . '%s' . PHP_EOL . '%s]', \implode(\PHP_EOL, $entries), $outerIndent);
         }
 
-        return \sprintf('[]');
+        return \sprintf('');
     }
 
     /**
