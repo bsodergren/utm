@@ -109,7 +109,6 @@ class Option extends InputOption
                     $result = self::valueIsArray($value, $name, [$default]);
                 } else {
                     $result = self::valueIsString($value, $name, $default);
-                    $result = ltrim($result, '=');
                 }
             } else {
                 $result = self::valueIsArray($value, $name, [$default]);
@@ -126,7 +125,9 @@ class Option extends InputOption
 
     private static function ispath($text, $name)
     {
+        $text = ltrim($text, '=');
         if ('filelist' == $name) {
+
             return realpath($text);
         }
 
@@ -157,7 +158,7 @@ class Option extends InputOption
 
     private static function valueIsString($value, $name, $default = null)
     {
-        return $value;
+        return ltrim($value, '=');
     }
 
     public static function isFalse($name)
