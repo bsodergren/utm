@@ -14,11 +14,11 @@ use Camoo\Config\Config;
 class Utm
 {
     public static $SHOW_HTML_DUMP = false;
-    public static $UTM_CONFIG     = [];
-    public static $LOG_DIR        = __DIR__ . '/logs';
-    public static $LOG_STYLE      = 'pretty';
+    public static $UTM_CONFIG = [];
+    public static $LOG_DIR = __DIR__ . '/logs';
+    public static $LOG_STYLE = 'pretty';
     private static $logger;
-
+    public static $DumpServer = null;
 
     public static $SQL_TABLE_DIR;
     public static $SQL_UPDATE_DIR;
@@ -80,16 +80,16 @@ class Utm
         }
     }
 
-    public static function firstRun($dbType = 'mysql', $options=[])
+    public static function firstRun($dbType = 'mysql', $options = [])
     {
         self::$SQL_TABLE_DIR    = $options['table_dir'];
         self::$SQL_UPDATE_DIR   = $options['update_dir'];
         self::$SQL_TABLE_PREFIX = $options['prefix'];
 
-        self::$SQL_USERNAME     = $options['username'];
-        self::$SQL_PASSWORD     = $options['password'];
-        self::$SQL_HOSTNAME     = $options['hostname'];
-        self::$SQL_DATABASE     = $options['database'];
+        self::$SQL_USERNAME = $options['username'];
+        self::$SQL_PASSWORD = $options['password'];
+        self::$SQL_HOSTNAME = $options['hostname'];
+        self::$SQL_DATABASE = $options['database'];
 
 
 

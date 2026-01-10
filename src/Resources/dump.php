@@ -8,9 +8,24 @@ use Symfony\Component\VarDumper\VarDumper;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utm;
 
+
+
+function getEnv()
+{
+
+    if (isset(UTM::$DumpServer) && UTM::$DumpServer === true) {
+        return true;
+    }
+
+    if (isset($_ENV['VAR_DUMPER_FORMAT']) && 'quiet' == $_ENV['VAR_DUMPER_FORMAT']) {
+        return false;
+    }
+}
+
+
 function DumpServerExists()
 {
-    if (isset($_ENV['VAR_DUMPER_FORMAT']) && 'quiet' == $_ENV['VAR_DUMPER_FORMAT']) {
+    if (getEnv() === false) {
         return false;
     }
 
@@ -101,15 +116,15 @@ if (!function_exists('utmddump')) {
 }
 
 if (!function_exists('utmshutdown')) {
-    function utmshutdown($options = ['print'=>'info'])
+    function utmshutdown($options = ['print' => 'info'])
     {
         foreach ($options as $cmd => $type) {
             if (is_array($type)) {
                 foreach ($type as $subcmd) {
-                    $method[] = $cmd.'_'.$subcmd;
+                    $method[] = $cmd . '_' . $subcmd;
                 }
             } else {
-                $method[] = $cmd.'_'.$type;
+                $method[] = $cmd . '_' . $type;
             }
         }
 
