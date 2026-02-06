@@ -9,34 +9,19 @@ use UTM\Utilities\Debug\Debug;
 use UTM\Utm;
 
 
-if (!function_exists('UtmGetEnv')) {
 
-    function UtmGetEnv()
-    {
+function DumpServerExists()
+{
 
-        if (isset(UTM::$DumpServer) && UTM::$DumpServer === true) {
-            return true;
-        }
-
-        if (isset($_ENV['VAR_DUMPER_FORMAT']) && 'quiet' == $_ENV['VAR_DUMPER_FORMAT']) {
-            return false;
-        }
+    if (isset($_ENV['VAR_DUMPER_FORMAT']) && 'quiet' == $_ENV['VAR_DUMPER_FORMAT']) {
+        return false;
     }
-}
-if (!function_exists('DumpServerExists')) {
-    function DumpServerExists()
-    {
-        if (getEnv() === false) {
-            return false;
-        }
-
-        $fp = @fsockopen('tcp://127.0.0.1', 9912, $errno, $errstr, 1);
-        if ($fp) {
-            return true;
-        }
-
-        return Utm::$SHOW_HTML_DUMP;
+    $fp = @fsockopen('tcp://127.0.0.1', 9912, $errno, $errstr, 1);
+    if ($fp) {
+        return true;
     }
+
+    return Utm::$SHOW_HTML_DUMP;
 }
 
 if (!function_exists('UtmDump')) {

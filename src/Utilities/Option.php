@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -20,11 +21,11 @@ class Option extends InputOption
     /**
      * init.
      *
-     * @param mixed $input
+     * @param  mixed  $input
      */
     public static function init(InputInterface $input, $options = null)
     {
-        if (null === self::$options) {
+        if (self::$options === null) {
             self::$options = $input->getOptions();
         }
 
@@ -42,6 +43,7 @@ class Option extends InputOption
                 foreach ($commandOptions as $Option) {
                     if (str_contains($Option, ',')) {
                         $optArray = array_merge($optArray, explode(',', $Option));
+
                         continue;
                     } else {
                         if (\is_array($Option)) {
@@ -58,9 +60,9 @@ class Option extends InputOption
                 foreach ($optArray as $string) {
                     $pcs = explode('=', $string);
 
-                    if ('true' == $pcs[1]) {
+                    if ($pcs[1] == 'true') {
                         $pcs[1] = true;
-                    } elseif ('false' == $pcs[1]) {
+                    } elseif ($pcs[1] == 'false') {
                         $pcs[1] = false;
                     }
 
@@ -79,15 +81,15 @@ class Option extends InputOption
 
     public static function getOptions()
     {
-        if (0 == \count(self::$cmdOptions)) {
+        if (\count(self::$cmdOptions) == 0) {
             foreach (self::$options as $option => $value) {
                 if (\is_array($value)) {
                     if (\count($value) > 0) {
                         self::$cmdOptions[$option] = $value;
                     }
                 } else {
-                    if (null !== $value) {
-                        if (false != $value) {
+                    if ($value !== null) {
+                        if ($value != false) {
                             self::$cmdOptions[$option] = $value;
                         }
                     }
@@ -103,7 +105,11 @@ class Option extends InputOption
         $result = $default;
         if (\array_key_exists($name, self::$options)) {
             $value = self::$options[$name];
-            if (!\is_array($value)) {
+            if (is_null($value)) {
+                return $value;
+            }
+
+            if (! \is_array($value)) {
                 if (str_contains($value, ',')) {
                     $value  = explode(',', $value);
                     $result = self::valueIsArray($value, $name, [$default]);
@@ -114,7 +120,7 @@ class Option extends InputOption
                 $result = self::valueIsArray($value, $name, [$default]);
             }
             if (\is_array($result)) {
-                if (true == $return) {
+                if ($return == true) {
                     $result = $result[0];
                 }
             }
@@ -126,8 +132,7 @@ class Option extends InputOption
     private static function ispath($text, $name)
     {
         $text = ltrim($text, '=');
-        if ('filelist' == $name) {
-
+        if ($name == 'filelist') {
             return realpath($text);
         }
 
@@ -141,7 +146,7 @@ class Option extends InputOption
             if (str_contains($text, ',')) {
                 $textArray = explode(',', $text);
                 foreach ($textArray as $ttext) {
-                    if ('' != $ttext) {
+                    if ($ttext != '') {
                         $ret[] = self::ispath($ttext, $name);
                     }
                 }
@@ -149,7 +154,7 @@ class Option extends InputOption
                 $ret[] = self::ispath($text, $name);
             }
         }
-        if (0 == \count($ret)) {
+        if (\count($ret) == 0) {
             $ret = $default;
         }
 
@@ -158,6 +163,10 @@ class Option extends InputOption
 
     private static function valueIsString($value, $name, $default = null)
     {
+        if ($value === null) {
+            return $default;
+        }
+
         return ltrim($value, '=');
     }
 
@@ -165,13 +174,13 @@ class Option extends InputOption
     {
         $val = self::isTrue($name);
 
-        return !$val;
+        return ! $val;
     }
 
     public static function isTrue($name)
     {
         if (\defined($name)) {
-            if (true == \constant($name)) {
+            if (\constant($name) == true) {
                 return true;
             } else {
                 return false;
@@ -190,7 +199,7 @@ class Option extends InputOption
 
                 return false;
             }
-            if (null !== self::$options[$name]) {
+            if (self::$options[$name] !== null) {
                 return self::$options[$name];
             }
         }

@@ -14,7 +14,6 @@ class Utm
     public static $LOG_DIR = __DIR__ . '/logs';
     public static $LOG_STYLE = 'pretty';
     private static $logger;
-    public static $DumpServer = null;
 
     public static $SQL_TABLE_DIR;
     public static $SQL_UPDATE_DIR;
