@@ -8,9 +8,7 @@ namespace UTM\Bundle\mysql;
 
 use ArrayIterator;
 use Exception;
-use mysqli;
 use ReflectionClass;
-use stdClass;
 
 /**
  * MysqliDb Class
@@ -46,7 +44,7 @@ class MysqliDb
     /**
      * MySQLi instances
      *
-     * @var mysqli[]
+     * @var \mysqli[]
      */
     protected $_mysqli = [];
 
@@ -271,7 +269,7 @@ class MysqliDb
     protected $_transaction_in_progress = false;
 
     /**
-     * @param  string  $host
+     * @param  string|array  $host
      * @param  string  $username
      * @param  string  $password
      * @param  string  $db
@@ -384,8 +382,7 @@ class MysqliDb
     /**
      * A method to disconnect from the database
      *
-     * @params string $connection connection name to disconnect
-     *
+     * @param  string  $connection  connection name to disconnect
      * @param  string  $connection
      * @return void
      */
@@ -429,7 +426,7 @@ class MysqliDb
     /**
      * A method to get mysqli object or create it in case needed
      *
-     * @return mysqli
+     * @return \mysqli
      *
      * @throws Exception
      */
@@ -550,7 +547,7 @@ class MysqliDb
      * @author Jonas Barascu
      *
      * @param  [[Type]] $query [[Description]]
-     * @return bool|mysqli_result
+     * @return bool|\mysqli_result
      *
      * @throws Exception
      */
@@ -809,7 +806,7 @@ class MysqliDb
      *
      * @param  string  $tableName  The name of the database table to work with.
      * @param  string|array  $columns  Desired columns
-     * @return array Contains the returned rows from the select query.
+     * @return array|MysqliDb|null Contains the returned rows from the select query.
      *
      * @throws Exception
      */
@@ -963,7 +960,7 @@ class MysqliDb
     public function update($tableName, $tableData, $numRows = null)
     {
         if ($this->isSubQuery) {
-            return;
+            return false;
         }
 
         $this->_query = 'UPDATE ' . self::$prefix . $tableName;
@@ -991,7 +988,7 @@ class MysqliDb
     public function delete($tableName, $numRows = null)
     {
         if ($this->isSubQuery) {
-            return;
+            return false;
         }
 
         $table = self::$prefix . $tableName;
@@ -1151,7 +1148,7 @@ class MysqliDb
      *
      * @throws Exception
      */
-    public function loadData($importTable, $importFile, $importSettings = null)
+    public function loadData($importTable, $importFile, $importSettings = [])
     {
         // We have to check if the file exists
         if (! file_exists($importFile)) {
@@ -1164,7 +1161,7 @@ class MysqliDb
         $settings = ['fieldChar' => ';', 'lineChar' => PHP_EOL, 'linesToIgnore' => 1];
 
         // Check the import settings
-        if (gettype($importSettings) == 'array') {
+        if (is_array($importSettings)) {
             // Merge the default array with the custom one
             $settings = array_merge($settings, $importSettings);
         }
@@ -1236,7 +1233,7 @@ class MysqliDb
         $settings = ['linesToIgnore' => 0];
 
         // Check the import settings
-        if (gettype($importSettings) == 'array') {
+        if (is_array($importSettings)) {
             $settings = array_merge($settings, $importSettings);
         }
 
@@ -1484,10 +1481,10 @@ class MysqliDb
      *
      * @throws Exception
      */
-    public function ping()
-    {
-        return $this->mysqli()->ping();
-    }
+    // public function ping()
+    // {
+    //     return $this->mysqli()->ping();
+    // }
 
     /**
      * This method is needed for prepared statements. They require
@@ -1582,7 +1579,7 @@ class MysqliDb
     private function _buildInsert($tableName, $insertData, $operation)
     {
         if ($this->isSubQuery) {
-            return;
+            return false;
         }
 
         $this->_query     = $operation . ' ' . implode(' ', $this->_queryOptions) . ' INTO ' . self::$prefix . $tableName;
@@ -1618,7 +1615,7 @@ class MysqliDb
      * @param  int|array  $numRows  Array to define SQL limit in format Array ($offset, $count)
      *                              or only $count
      * @param  array  $tableData  Should contain an array of data for updating the database.
-     * @return mysqli_stmt|bool Returns the $stmt object.
+     * @return \mysqli_stmt|bool Returns the $stmt object.
      *
      * @throws Exception
      */
@@ -1642,9 +1639,8 @@ class MysqliDb
         }
 
         $this->_lastQuery = $this->replacePlaceHolders($this->_query, $this->_bindParams);
-
         if ($this->isSubQuery) {
-            return;
+            return false;
         }
 
         // Prepare query
@@ -1662,7 +1658,7 @@ class MysqliDb
      * This helper method takes care of prepared statements' "bind_result method
      * , when the number of variables to pass is unknown.
      *
-     * @param  mysqli_stmt  $stmt  Equal to the prepared statement object.
+     * @param  \mysqli_stmt  $stmt  Equal to the prepared statement object.
      * @return array|string The results of the SQL fetch.
      *
      * @throws Exception
@@ -1715,10 +1711,10 @@ class MysqliDb
 
         while ($stmt->fetch()) {
             if ($this->returnType == 'object') {
-                $result = new stdClass;
+                $result = new \stdClass;
                 foreach ($row as $key => $val) {
                     if (is_array($val)) {
-                        $result->$key = new stdClass;
+                        $result->$key = new \stdClass;
                         foreach ($val as $k => $v) {
                             $result->$key->$k = $v;
                         }
@@ -2046,7 +2042,7 @@ class MysqliDb
      * Method attempts to prepare the SQL query
      * and throws an error if there was a problem.
      *
-     * @return mysqli_stmt
+     * @return \mysqli_stmt
      *
      * @throws Exception
      */
@@ -2171,7 +2167,7 @@ class MysqliDb
      * Mostly internal method to get query and its params out of subquery object
      * after get() and getAll()
      *
-     * @return array
+     * @return array|null
      */
     public function getSubQuery()
     {

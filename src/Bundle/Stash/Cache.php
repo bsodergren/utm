@@ -1,32 +1,34 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace UTM\Bundle\Stash;
 
+use UTM\Bundle\Stash\Drivers\File;
 use UTM\Bundle\Stash\Exceptions\InvalidDriverException;
+use UTM\Bundle\Stash\Interfaces\Cacheable;
 
 class Cache
 {
     /**
      * Instantiate the desired cache driver object.
      *
-     * @param string   $driver Driver to initialize
-     * @param \Closure $config Driver-specific configuration closure
+     * @param  string  $driver  Driver to initialize
+     * @param  \Closure  $config  Driver-specific configuration closure
+     * @return Cacheable A Cacheable object
      *
-     * @return \PHLAK\Stash\Interfaces\Cacheable A Cacheable object
-     *
-     * @throws \PHLAK\Stash\Exceptions\InvalidDriverException
+     * @throws InvalidDriverException
      */
-    public static function make($driver, \Closure $config = null)
+    public static function make($driver, \Closure $config)
     {
         @trigger_error('The Stash::make() method has been deprecated and will be'
-            .' removed in a future version. Use a specific named-constructor'
-            .' instead.', \E_USER_DEPRECATED);
+            . ' removed in a future version. Use a specific named-constructor'
+            . ' instead.', \E_USER_DEPRECATED);
 
-        if (!method_exists(__CLASS__, $driver)) {
-            throw new InvalidDriverException('Unable to initialize driver of type '.$driver);
+        if (! method_exists(__CLASS__, $driver)) {
+            throw new InvalidDriverException('Unable to initialize driver of type ' . $driver);
         }
 
         return self::$driver($config);
@@ -35,12 +37,11 @@ class Cache
     /**
      * Instantiate the File cache driver object.
      *
-     * @param \Closure $config A configuration closure
-     *
-     * @return \PHLAK\Stash\Drivers\File A File cache object
+     * @param  \Closure  $config  A configuration closure
+     * @return File A cache object
      */
     public static function file(\Closure $config)
     {
-        return new Drivers\File($config);
+        return new File($config);
     }
 }
