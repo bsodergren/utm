@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UTM Common classes
  */
@@ -14,14 +15,14 @@ use UTM\Utilities\Option;
  * file that was distributed with this source code.
  */
 
-if (!function_exists('OptionIsTrue')) {
+if (! function_exists('OptionIsTrue')) {
     function OptionIsTrue($var)
     {
         return Option::isTrue($var);
     }
 }
 
-if (!function_exists('OptionIsFalse')) {
+if (! function_exists('OptionIsFalse')) {
     function OptionIsFalse($var)
     {
         return Option::isFalse($var);

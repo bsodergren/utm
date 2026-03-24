@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UTM Common classes
  */
@@ -33,14 +34,14 @@ class Colors
         $this->foreground_colors['light_gray']   = '0;37';
         $this->foreground_colors['white']        = '1;37';
 
-        $this->background_colors['black']        = '40';
-        $this->background_colors['red']          = '41';
-        $this->background_colors['green']        = '42';
-        $this->background_colors['yellow']       = '43';
-        $this->background_colors['blue']         = '44';
-        $this->background_colors['magenta']      = '45';
-        $this->background_colors['cyan']         = '46';
-        $this->background_colors['light_gray']   = '47';
+        $this->background_colors['black']      = '40';
+        $this->background_colors['red']        = '41';
+        $this->background_colors['green']      = '42';
+        $this->background_colors['yellow']     = '43';
+        $this->background_colors['blue']       = '44';
+        $this->background_colors['magenta']    = '45';
+        $this->background_colors['cyan']       = '46';
+        $this->background_colors['light_gray'] = '47';
     } //end __construct()
 
     public function getClassColor()
@@ -48,15 +49,15 @@ class Colors
         if (isset($this->foreground_colors[$this->fg_color])) {
             return 'color:' . $this->fg_color . ';';
         }
+
         return '';
     }
 
     public function getColoredDiv($html, $background_color)
     {
-
         $class_tag = '';
         if (isset($this->background_colors[$background_color])) {
-            $class_tag = "class";
+            $class_tag = 'class';
         }
     }
 
@@ -65,10 +66,9 @@ class Colors
     {
         $this->fg_color = $foreground_color;
         $colored_string = '<span style="' . $this->getClassColor() . '">' . $string . '</span>';
-        ;
+
         return $colored_string;
     } //end getColoredHTML()
-
 
     public function getColoredString($string, $foreground_color = null, $background_color = null)
     {
@@ -90,13 +90,11 @@ class Colors
         return $colored_string;
     } //end getColoredString()
 
-
     // Returns all foreground color names
     public function getForegroundColors()
     {
         return array_keys($this->foreground_colors);
     } //end getForegroundColors()
-
 
     // Returns all background color names
     public function getBackgroundColors()
@@ -104,8 +102,8 @@ class Colors
         return array_keys($this->background_colors);
     } //end getBackgroundColors()
 
-    public static function colorstring($string, $fg_color=null, $background_color=null)
+    public static function colorstring($string, $fg_color = null, $background_color = null)
     {
-        return (new Colors())->getColoredString($string, $fg_color, $background_color);
+        return (new Colors)->getColoredString($string, $fg_color, $background_color);
     }
 } //end class

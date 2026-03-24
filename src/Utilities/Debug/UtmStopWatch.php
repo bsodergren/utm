@@ -1,32 +1,33 @@
 <?php
+
 /**
  * UTM Common classes
  */
 
 namespace UTM\Utilities\Debug;
 
-use UTM\Utilities\Option;
-use UTM\Bundle\Monolog\UTMLog;
-use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Stopwatch\Stopwatch;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Option;
 
 class UtmStopWatch
 {
-    public static $clock          = false;
+    public static $clock = false;
 
-    public static $display        = true;
+    public static $display = true;
 
-    public static $writeNow       = false;
+    public static $writeNow = false;
 
     private static $stopwatch;
 
     private static $io;
 
-    private static $timerLog      = __LOGFILE_DIR__ . '/timer.log';
+    private static $timerLog = __LOGFILE_DIR__ . '/timer.log';
 
-    private static $watchArray    = [];
+    private static $watchArray = [];
 
     private static $stopWatchName = 'default';
 
@@ -39,7 +40,7 @@ class UtmStopWatch
             "/=>[ ]?\n[ ]+\\[/"                     => '=> [',
             "/([ ]*)(\\'[^\\']+\\') => ([\\[\\'])/" => '$1$2 => $3',
         ];
-        $export   = preg_replace(array_keys($patterns), array_values($patterns), $export);
+        $export = preg_replace(array_keys($patterns), array_values($patterns), $export);
         if ((bool) $return) {
             return $export;
         } echo $export;
@@ -52,11 +53,11 @@ class UtmStopWatch
         Option::init($input);
 
         if (Option::isTrue('time')) {
-            $file            = self::$timerLog;
-            $string          = UtmLog::formatPrint(implode(' ', $_SERVER['argv']), ['green', 'italic']) . \PHP_EOL;
+            $file   = self::$timerLog;
+            $string = UtmLog::formatPrint(implode(' ', $_SERVER['argv']), ['green', 'italic']) . \PHP_EOL;
             file_put_contents($file, $string);
             self::$io        = new SymfonyStyle($input, $output);
-            self::$stopwatch = new StopWatch();
+            self::$stopwatch = new StopWatch;
             self::$stopwatch->start(self::$stopWatchName);
         }
     }
@@ -68,7 +69,7 @@ class UtmStopWatch
             // $text = sprintf("%-20s",   $text);
             // $var = str_replace("\n"," ", var_export($var,1));
 
-            $var         = preg_replace('/(\s{1,})/m', ' ', var_export($var, 1));
+            $var = preg_replace('/(\s{1,})/m', ' ', var_export($var, 1));
 
             //                $var = self::varexport($var,true);
 
@@ -81,7 +82,7 @@ class UtmStopWatch
         if (Option::isTrue('time')) {
             self::$stopwatch->stop(self::$stopWatchName);
             self::dump($text, $var);
-            if (false === self::$writeNow) {
+            if (self::$writeNow === false) {
                 self::$writeNow = true;
                 self::log(self::$watchArray);
                 self::$writeNow = false;
@@ -99,12 +100,12 @@ class UtmStopWatch
 
     public static function log($array)
     {
-        if (true == self::$display) {
+        if (self::$display == true) {
             $string[] = implode('', $array[0]);
 
             self::$io->listing($string);
         } else {
-            if (true === self::$writeNow) {
+            if (self::$writeNow === true) {
                 self::writeLog($array);
             } else {
                 self::$watchArray[] = $array[0];
@@ -130,15 +131,15 @@ class UtmStopWatch
         }
 
         foreach ($array as $n => $row) {
-            $txt        = str_pad($row[0], $maxtxtLen);
-            $time       = str_pad($row[1], $maxTimeLen);
+            $txt  = str_pad($row[0], $maxtxtLen);
+            $time = str_pad($row[1], $maxTimeLen);
             //            $cmd        = str_pad($row[2], $maxCmdLen);
-            $var        = $row[2];
+            $var = $row[2];
 
             $strArray[] = $txt . ', ' . $time . ', ' . $var;
         }
 
-        $string     = implode(\PHP_EOL, $strArray) . \PHP_EOL;
+        $string = implode(\PHP_EOL, $strArray) . \PHP_EOL;
         // $string = var_export($array,1);
         file_put_contents($file, $string, \FILE_APPEND);
     }

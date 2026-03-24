@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -45,13 +46,13 @@ class UTMLog
         // $channel = 'default';
         // $this->processor = new PsrLogMessageProcessor();
         // $LogFormat = ["%message% %context%\n",null,true];
-        $LogFormat = ["[%datetime%][%level_name%] %message% %context%\n", 'g:i:s.v', true];
-        $format = new UtmLineFormatter(...$LogFormat);
+        $LogFormat    = ["[%datetime%][%level_name%] %message% %context%\n", 'g:i:s.v', true];
+        $format       = new UtmLineFormatter(...$LogFormat);
         $this->logger = new Logger($channel);
 
         //        ErrorHandler::register($this->logger);
 
-        $log_file = __LOGFILE_DIR__.'/'.$channel.'.log';
+        $log_file = __LOGFILE_DIR__ . '/' . $channel . '.log';
         if (file_exists($log_file)) {
             file_put_contents($log_file, '');
         }
@@ -108,13 +109,13 @@ class UTMLog
     /**
      * Method logger.
      *
-     * @param $message $message [explicite description]
+     * @param  $message  $message [explicite description]
      */
     public static function logger($message, ...$args)
     {
-        if (0 == \count($args)) {
+        if (\count($args) == 0) {
             $context = '';
-        } elseif (1 == \count($args)) {
+        } elseif (\count($args) == 1) {
             $context = $args[0];
         } else {
             foreach ($args as $i => $array) {
@@ -132,36 +133,36 @@ class UTMLog
 
     public static function LogStart($msg = 'Start Logging')
     {
-        $message = str_pad('> '.$msg.' <', self::$Cols, '-', \STR_PAD_BOTH);
+        $message = str_pad('> ' . $msg . ' <', self::$Cols, '-', \STR_PAD_BOTH);
         self::$Logger->log(Logger::NOTICE, $message, null);
     }
 
     public static function LogEnd($msg = 'Exiting')
     {
-        $message = str_pad('> '.$msg.' <', self::$Cols, '-', \STR_PAD_BOTH);
+        $message = str_pad('> ' . $msg . ' <', self::$Cols, '-', \STR_PAD_BOTH);
         self::$Logger->log(Logger::NOTICE, $message, null);
     }
 
     /**
      * Method log.
      *
-     * @param $level   $level [explicite description]
-     * @param $message $message [explicite description]
-     * @param $context $context [explicite description]
+     * @param  $level  $level [explicite description]
+     * @param  $message  $message [explicite description]
+     * @param  $context  $context [explicite description]
      */
     protected function log($level, $message, $context)
     {
         $message = self::formatPrint(self::dump($message), ['blue']);
 
         $caller = Debug::CallingFunctionName();
-        if ('' != $caller) {
+        if ($caller != '') {
             $caller .= ';';
         }
 
-        $message = $caller.$message; // .PHP_EOL.PHP_TAB;
+        $message = $caller . $message; // .PHP_EOL.PHP_TAB;
 
-        if (null !== $context) {
-            if ('' != $context) {
+        if ($context !== null) {
+            if ($context != '') {
                 $context = self::dump($context);
             } else {
                 $context = null;
@@ -173,9 +174,9 @@ class UTMLog
     /**
      * Method dump.
      *
-     * @param $var       $var [explicite description]
-     * @param $depth     $depth [explicite description]
-     * @param $highlight $highlight [explicite description]
+     * @param  $var  $var [explicite description]
+     * @param  $depth  $depth [explicite description]
+     * @param  $highlight  $highlight [explicite description]
      */
     public static function dump($var, $depth = 4, $highlight = false)
     {
@@ -190,8 +191,8 @@ class UTMLog
     /**
      * Method dumpInternal.
      *
-     * @param $var   $var [explicite description]
-     * @param $level $level [explicite description]
+     * @param  $var  $var [explicite description]
+     * @param  $level  $level [explicite description]
      */
     private static function dumpInternal($var, $level)
     {
@@ -226,43 +227,43 @@ class UTMLog
 
             case 'array':
                 if (self::$_depth <= $level) {
-                    self::$_output .= \PHP_EOL.'array(...)';
+                    self::$_output .= \PHP_EOL . 'array(...)';
                 } elseif (empty($var)) {
-                    self::$_output .= \PHP_EOL.'array()';
+                    self::$_output .= \PHP_EOL . 'array()';
                 } else {
-                    $keys = array_keys($var);
+                    $keys   = array_keys($var);
                     $spaces = str_repeat(self::$DumpPadding, $level * 4);
-                    self::$_output .= \PHP_EOL.'array (';
+                    self::$_output .= \PHP_EOL . 'array (';
 
                     foreach ($keys as $key) {
-                        self::$_output .= "\n".$spaces." [{$key}] => ";
+                        self::$_output .= "\n" . $spaces . " [{$key}] => ";
                         self::dumpInternal($var[$key], $level + 1);
                     }
 
-                    self::$_output .= "\n".$spaces.')';
+                    self::$_output .= "\n" . $spaces . ')';
                 }
                 break;
 
             case 'object':
                 if (($id = array_search($var, self::$_objects, true)) !== false) {
-                    self::$_output .= $var::class.'#'.($id + 1).'(...)';
+                    self::$_output .= $var::class . '#' . ($id + 1) . '(...)';
                 } elseif (self::$_depth <= $level) {
-                    self::$_output .= $var::class.'(...)';
+                    self::$_output .= $var::class . '(...)';
                 } else {
-                    $id = array_push(self::$_objects, $var);
+                    $id        = array_push(self::$_objects, $var);
                     $className = $var::class;
-                    $members = (array) $var;
-                    $keys = array_keys($members);
-                    $spaces = str_repeat(self::$DumpPadding, $level * 4);
-                    self::$_output .= "{$className}#{$id}\n".$spaces.'(';
+                    $members   = (array) $var;
+                    $keys      = array_keys($members);
+                    $spaces    = str_repeat(self::$DumpPadding, $level * 4);
+                    self::$_output .= "{$className}#{$id}\n" . $spaces . '(';
 
                     foreach ($keys as $key) {
                         $keyDisplay = strtr(trim($key), ["\0" => ':']);
-                        self::$_output .= "\n".$spaces." [{$keyDisplay}] => ";
+                        self::$_output .= "\n" . $spaces . " [{$keyDisplay}] => ";
                         self::dumpInternal($members[$key], $level + 1);
                     }
 
-                    self::$_output .= "\n".$spaces.')';
+                    self::$_output .= "\n" . $spaces . ')';
                 }
                 break;
         }
@@ -270,20 +271,20 @@ class UTMLog
 
     public static function formatPrint(string $text = '', array $format = [])
     {
-        if (false == self::$display) {
+        if (self::$display == false) {
             return $text;
         }
 
         $codes = [
-            'bold' => 1,
-            'italic' => 3, 'underline' => 4, 'strikethrough' => 9,
-            'black' => 30, 'red' => 31, 'green' => 32, 'yellow' => 33, 'blue' => 34, 'magenta' => 35, 'cyan' => 36, 'white' => 37,
+            'bold'    => 1,
+            'italic'  => 3, 'underline' => 4, 'strikethrough' => 9,
+            'black'   => 30, 'red' => 31, 'green' => 32, 'yellow' => 33, 'blue' => 34, 'magenta' => 35, 'cyan' => 36, 'white' => 37,
             'blackbg' => 40, 'redbg' => 41, 'greenbg' => 42, 'yellowbg' => 44, 'bluebg' => 44, 'magentabg' => 45, 'cyanbg' => 46, 'lightgreybg' => 47,
         ];
         $formatMap = array_map(function ($v) use ($codes) {
             return $codes[$v];
         }, $format);
 
-        return "\e[".implode(';', $formatMap).'m'.$text."\e[0m";
+        return "\e[" . implode(';', $formatMap) . 'm' . $text . "\e[0m";
     }
 }

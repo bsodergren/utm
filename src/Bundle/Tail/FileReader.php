@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace UTM\Bundle\Tail;
 
 use Exception;
@@ -12,12 +14,13 @@ use UTM\Bundle\Tail\Exceptions\NotSeekable;
 final class FileReader
 {
     private string $absoluteFilePath;
+
     private int $cursor = 0;
+
     /** @var resource */
     private $fileHandle;
 
     /**
-     * @param string $absoluteFilePath
      * @throws FailedToReadFile
      * @throws NotAFile
      */
@@ -28,7 +31,6 @@ final class FileReader
     }
 
     /**
-     * @param string $absoluteFilePath
      * @throws FailedToReadFile
      * @throws NotAFile
      */
@@ -37,12 +39,12 @@ final class FileReader
         $this->rejectDirectory($absoluteFilePath);
 
         try {
-            $fileHandle = fopen($absoluteFilePath, "r");
+            $fileHandle = fopen($absoluteFilePath, 'r');
         } catch (Exception $exception) {
             throw new FailedToReadFile($absoluteFilePath, $exception);
         }
 
-        if (false === $fileHandle) {
+        if ($fileHandle === false) {
             throw new FailedToReadFile($absoluteFilePath);
         }
 
@@ -50,7 +52,6 @@ final class FileReader
     }
 
     /**
-     * @param string $absoluteFilePath
      * @throws NotAFile
      */
     private function rejectDirectory(string $absoluteFilePath): void
@@ -61,7 +62,6 @@ final class FileReader
     }
 
     /**
-     * @return Character
      * @throws FileClosed|NotSeekable
      */
     public function readPreviousCharacter(): Character
@@ -71,20 +71,20 @@ final class FileReader
         $this->cursor -= 1;
         try {
             $readResult = fseek($this->fileHandle, $this->cursor, SEEK_END);
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             throw new NotSeekable($this->absoluteFilePath, $exception);
         }
 
         if ($readResult === -1) {
             // Nothing to read
-            return new Character("");
+            return new Character('');
         }
 
         $character = fgetc($this->fileHandle);
 
-        if (false === $character) {
+        if ($character === false) {
             // Nothing to read
-            return new Character("");
+            return new Character('');
         }
 
         return new Character($character);
@@ -95,7 +95,7 @@ final class FileReader
      */
     private function rejectClosedFile(): void
     {
-        if (!is_resource($this->fileHandle)) {
+        if (! is_resource($this->fileHandle)) {
             throw new FileClosed($this->absoluteFilePath);
         }
     }
@@ -107,7 +107,7 @@ final class FileReader
     {
         $result = fclose($this->fileHandle);
 
-        if (false === $result) {
+        if ($result === false) {
             throw new FailedToCloseFile($this->absoluteFilePath);
         }
     }
@@ -118,7 +118,7 @@ final class FileReader
      */
     public function readPreviousCharacterSkippingNewLineCharacters(): Character
     {
-        while (!isset($currentCharacter) || $currentCharacter->isNewLine()) {
+        while (! isset($currentCharacter) || $currentCharacter->isNewLine()) {
             $currentCharacter = $this->readPreviousCharacter();
             if ($currentCharacter->isEmpty()) {
                 return $currentCharacter;

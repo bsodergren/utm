@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UTM Common classes
  */
@@ -8,11 +9,13 @@ namespace UTM\Utilities\Debug;
 class UTMTimer
 {
     private static float $origin;
+
     private static float $lastTimer;
 
     public static function start()
     {
         self::$origin = self::getNow();
+
         return self::$origin;
     }
 
@@ -22,6 +25,7 @@ class UTMTimer
     protected static function getNow(): float
     {
         self::$lastTimer = self::formatTime(microtime(true) * 1000 - self::$origin);
+
         return self::$lastTimer;
     }
 
@@ -42,8 +46,7 @@ class UTMTimer
     {
         $lastTime    = self::$lastTimer;
         $currentTime = self::getNow();
-        $duration    = self::formatTime($currentTime  - $lastTime);
-        utmdump([$duration,$lastTime,$currentTime]);
+        $duration    = self::formatTime($currentTime - $lastTime);
+        utmdump([$duration, $lastTime, $currentTime]);
     }
-
 }

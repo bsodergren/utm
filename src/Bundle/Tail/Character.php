@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace UTM\Bundle\Tail;
@@ -19,22 +20,22 @@ final class Character
 
     public function isNewLine(): bool
     {
-        return "\n" === $this->character || "\r" === $this->character;
+        return $this->character === "\n" || $this->character === "\r";
     }
 
     public function isNotNewLine(): bool
     {
-        return !$this->isNewLine();
+        return ! $this->isNewLine();
     }
 
     public function isEmpty(): bool
     {
-        return "" === $this->character;
+        return $this->character === '';
     }
 
     public function isNotEmpty(): bool
     {
-        return !$this->isEmpty();
+        return ! $this->isEmpty();
     }
 
     public function isPartOfALine(): bool

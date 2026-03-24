@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UTM Common classes
  */
@@ -10,6 +11,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 class Timer
 {
     public static $Obj;
+
     public static $logProc = false;
 
     public function __construct(

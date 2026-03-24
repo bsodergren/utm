@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UTM Common classes
  */
@@ -18,9 +19,9 @@ class UTMArray
     public static function diff($array, $compare, $diff = 'key')
     {
         $return_array = [];
-        if ('key' == $diff) {
+        if ($diff == 'key') {
             foreach ($array as $key => $value) {
-                if (!\array_key_exists($key, $compare)) {
+                if (! \array_key_exists($key, $compare)) {
                     $return_array[$key] = $value;
                 }
             }
@@ -38,11 +39,11 @@ class UTMArray
     {
         $ret = array_filter($arr, function ($value) use ($string, $exact, $key) {
             if (\is_array($value)) {
-                if (!array_key_exists($key, $value)) {
+                if (! array_key_exists($key, $value)) {
                     return 0;
                 }
 
-                if (true === $exact) {
+                if ($exact === true) {
                     if ($value[$key] == $string) {
                         return 1;
                     }
@@ -57,7 +58,7 @@ class UTMArray
                     return 0;
                 }
             } else {
-                if (true === $exact) {
+                if ($exact === true) {
                     if ($value == $string) {
                         return 1;
                     }

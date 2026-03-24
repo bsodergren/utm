@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UTM Common classes
  */
@@ -26,7 +27,7 @@ final class PrettyArray
                 $class = \str_replace('\\\\', '\\', $value);
                 $class = \sprintf('%s::class', $class);
 
-                return 0 === \mb_strpos($class, '\\') ? $class : '\\' . $class;
+                return \mb_strpos($class, '\\') === 0 ? $class : '\\' . $class;
             },
             'integer' => function ($value) {
                 return (string) $value;
@@ -50,7 +51,7 @@ final class PrettyArray
     /**
      * Returns a pretty php array for saving or output.
      *
-     * @param mixed[] $data
+     * @param  mixed[]  $data
      */
     public function print(array $data, int $indentLevel = 1): string
     {
@@ -61,7 +62,7 @@ final class PrettyArray
         $entries = [];
 
         foreach ($data as $key => $value) {
-            if (!\is_int($key)) {
+            if (! \is_int($key)) {
                 if ($this->isClass($key)) {
                     $key = $this->resolverCallbacks['class']($key);
                 } else {
@@ -92,7 +93,7 @@ final class PrettyArray
     {
         $type = \gettype($value);
 
-        if ('array' === $type) {
+        if ($type === 'array') {
             return $this->print($value, $indentLevel + 1);
         }
 
@@ -112,7 +113,7 @@ final class PrettyArray
      */
     private function isClass($key): bool
     {
-        if (!\is_string($key)) {
+        if (! \is_string($key)) {
             return false;
         }
 

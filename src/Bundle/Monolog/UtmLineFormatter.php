@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -34,7 +35,7 @@ class UtmLineFormatter extends LineFormatter
     public function stringify($value): string
     {
         if (\is_array($value)) {
-            if (0 == \count($value)) {
+            if (\count($value) == 0) {
                 return '';
             }
         }
@@ -46,9 +47,9 @@ class UtmLineFormatter extends LineFormatter
     {
         if ($this->allowInlineLineBreaks) {
             $str = preg_replace('/(?<!\\\\)\\\\[rn]/', "\n", $str);
-            if (null === $str) {
+            if ($str === null) {
                 $pcreErrorCode = preg_last_error();
-                throw new \RuntimeException('Failed to run preg_replace: '.$pcreErrorCode.' / '.Utils::pcreLastErrorMessage($pcreErrorCode));
+                throw new \RuntimeException('Failed to run preg_replace: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
             }
 
             return $str;

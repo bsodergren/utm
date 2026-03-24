@@ -1,32 +1,40 @@
 <?php
 
-
 namespace UTM;
 
+use Camoo\Config\Config;
 use Dotenv\Dotenv;
 use SaliBhdr\DumpLog\Factory\Logger;
-use Camoo\Config\Config;
 
 class Utm
 {
     public static $SHOW_HTML_DUMP = false;
+
     public static $UTM_CONFIG = [];
+
     public static $LOG_DIR = __DIR__ . '/logs';
+
     public static $LOG_STYLE = 'pretty';
+
     private static $logger;
 
     public static $SQL_TABLE_DIR;
+
     public static $SQL_UPDATE_DIR;
 
     public static $SQL_TABLE_PREFIX;
+
     public static $SQL_DATABASE;
+
     public static $SQL_USERNAME;
+
     public static $SQL_PASSWORD;
+
     public static $SQL_HOSTNAME;
 
     public function __construct($logdir = null)
     {
-        if (null !== $logdir) {
+        if ($logdir !== null) {
             self::$LOG_DIR = $logdir;
         }
 
@@ -35,13 +43,12 @@ class Utm
 
     public static function loadConifg($file)
     {
-
         self::$UTM_CONFIG = (new Config($file))->all();
     }
 
     public static function LoadEnv($directory = '')
     {
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             if (defined('__COMPOSER_DIR__')) {
                 $directory = dirname(__COMPOSER_DIR__, 1);
             } else {
@@ -50,7 +57,7 @@ class Utm
         }
 
         $fp = @fsockopen('tcp://127.0.0.1', 9912, $errno, $errstr, 1);
-        if (!$fp) {
+        if (! $fp) {
             $env_file = '.env';
         } else {
             $env_file = '.env-server';
@@ -85,9 +92,6 @@ class Utm
         self::$SQL_PASSWORD = $options['password'];
         self::$SQL_HOSTNAME = $options['hostname'];
         self::$SQL_DATABASE = $options['database'];
-
-
-
     }
 }
 // require_once __DIR__.'/Resources/Options.php';
