@@ -5,6 +5,7 @@ namespace UTM;
 use Camoo\Config\Config;
 use Dotenv\Dotenv;
 use SaliBhdr\DumpLog\Factory\Logger;
+use UTM\Utilities\Utilities;
 
 class Utm
 {
@@ -32,13 +33,30 @@ class Utm
 
     public static $SQL_HOSTNAME;
 
+    private $rotateLogs = true;
+
     public function __construct($logdir = null)
     {
         if ($logdir !== null) {
             self::$LOG_DIR = $logdir;
         }
-
+        $this->rotateLogs();
         self::$logger = Logger::make(self::$LOG_STYLE)->path(self::$LOG_DIR);
+    }
+
+    public function rotateLogs()
+    {
+        if (array_key_exists('rotateLogs', self::$UTM_CONFIG)) {
+            $this->rotateLogs = self::$UTM_CONFIG['rotateLogs'];
+        }
+        if ($this->rotateLogs === true) {
+            $logs = Utilities::get_filelist(self::$LOG_DIR, daysOld: 2);
+            if (count($logs) > 0) {
+                foreach ($logs as $file) {
+                    @unlink($file);
+                }
+            }
+        }
     }
 
     public static function loadConifg($file)
