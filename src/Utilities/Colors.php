@@ -14,6 +14,10 @@ class Colors
 
     private $fg_color;
 
+    private $defaultColor = 'white';
+
+    private $defaultBgColor = 'black';
+
     public function __construct()
     {
         // Set up shell colors
@@ -44,25 +48,39 @@ class Colors
         $this->background_colors['light_gray'] = '47';
     } //end __construct()
 
-    public function getClassColor()
+    private function getFgColor($color)
     {
-        if (isset($this->foreground_colors[$this->fg_color])) {
-            return 'color:' . $this->fg_color . ';';
+        if (array_key_exists($color, $this->foreground_colors)) {
+            return $this->foreground_colors[$color];
         }
 
-        return '';
+        return $this->foreground_colors[$this->defaultColor];
+    }
+
+    private function getBgColor($color)
+    {
+        if (array_key_exists($color, $this->background_colors)) {
+            return $this->background_colors[$color];
+        }
+
+        return \false;
+    }
+
+    public function getClassColor()
+    {
+        return 'color:' . $this->getFgColor($this->fg_color) . ';';
     }
 
     public function getColoredDiv($html, $background_color)
     {
         $class_tag = '';
-        if (isset($this->background_colors[$background_color])) {
+        if ($this->getBgColor($background_color)) {
             $class_tag = 'class';
         }
     }
 
     // Returns colored string
-    public function getColoredSpan($string, $foreground_color = null, $background_color = null)
+    public function getColoredSpan($string, $foreground_color = 'white', $background_color = '')
     {
         $this->fg_color = $foreground_color;
         $colored_string = '<span style="' . $this->getClassColor() . '">' . $string . '</span>';
@@ -70,18 +88,18 @@ class Colors
         return $colored_string;
     } //end getColoredHTML()
 
-    public function getColoredString($string, $foreground_color = null, $background_color = null)
+    public function getColoredString($string, $foreground_color = 'white', $background_color = '')
     {
         $colored_string = '';
 
         // Check if given foreground color found
-        if (isset($this->foreground_colors[$foreground_color])) {
-            $colored_string .= "\033[" . $this->foreground_colors[$foreground_color] . 'm';
+        if ($fgColor = $this->getFgColor($foreground_color)) {
+            $colored_string .= "\033[" . $fgColor . 'm';
         }
 
         // Check if given background color found
-        if (isset($this->background_colors[$background_color])) {
-            $colored_string .= "\033[" . $this->background_colors[$background_color] . 'm';
+        if ($bgColor = $this->getBgColor($background_color)) {
+            $colored_string .= "\033[" . $bgColor . 'm';
         }
 
         // Add string and end coloring
@@ -102,7 +120,7 @@ class Colors
         return array_keys($this->background_colors);
     } //end getBackgroundColors()
 
-    public static function colorstring($string, $fg_color = null, $background_color = null)
+    public static function colorstring($string, $fg_color = 'white', $background_color = '')
     {
         return (new Colors)->getColoredString($string, $fg_color, $background_color);
     }

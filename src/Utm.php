@@ -97,6 +97,12 @@ class Utm
             case 'exception':
             case 'log':
                 self::$logger->$method($args);
+                break;
+            default:
+                if (\method_exists(self::class, $method)) {
+                    self::$method($args);
+                }
+                break;
         }
     }
 
