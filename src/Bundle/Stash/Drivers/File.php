@@ -234,7 +234,9 @@ class File implements Cacheable
     {
         $destination = $this->filePath($key);
 
-        @mkdir(\dirname($destination));
+        if (! file_exists(dirname($destination))) {
+            @mkdir(\dirname($destination));
+        }
 
         return file_put_contents($destination, serialize(new Item($data, $minutes)), \LOCK_EX) ? true : false;
     }
@@ -247,6 +249,9 @@ class File implements Cacheable
      */
     protected function getCacheContents($key)
     {
+        if (! file_exists($this->filePath($key))) {
+            return false;
+        }
         $item = unserialize(@file_get_contents($this->filePath($key)));
 
         if (! $item || $item->expired()) {
