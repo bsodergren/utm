@@ -13,7 +13,9 @@
         "symfony/stopwatch": "^7.2.2",
         "nesbot/carbon": "^3.8.4",
         "salibhdr/php-dump-logger": "^2.1.1",
-        "nette/finder": "^3.0"
+        
+        "jbzoo/utils": "^7.3",
+        "stecman/symfony-console-completion": "^0.15.0"
     },    
         "require-dev": {
             "symfony/var-dumper": "^6.4|^7.2"
@@ -34,6 +36,11 @@
 		"classmap": ["src/"]
 	},
    
+    "scripts": {
+        "release": [
+            "UTM\\doRelease::execute"
+        ]
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }

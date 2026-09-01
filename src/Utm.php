@@ -40,6 +40,7 @@ class Utm
         if ($logdir !== null) {
             self::$LOG_DIR = $logdir;
         }
+
         $this->rotateLogs();
         self::$logger = Logger::make(self::$LOG_STYLE)->path(self::$LOG_DIR);
     }
