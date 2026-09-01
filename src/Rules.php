@@ -1,8 +1,7 @@
 <?php
+
 /**
- *
- *   UTM Common Class
- *
+ * This file is part of the UTM package. (c) Bjorn
  */
 
 namespace UTM;
@@ -20,9 +19,25 @@ class Rules
         self::$fileHeaderComment = $comment;
     }
 
-    public static function getCsFixerRules()
+    public static function getCsFixerRules($rule = 1)
     {
-        return self::getRulesetOne();
+        $rules = self::getHeaderRules();
+
+        switch ($rule) {
+            case 1:
+                $rules = array_merge($rules, self::getRulesetOne());
+                // no break
+            case 2:
+                $rules = array_merge($rules, self::getRulesetTwo());
+                // no break
+            case 3:
+                $rules = array_merge($rules, self::getRulesetThree());
+                // no break
+            default:
+                $rules = array_merge($rules, self::getRulesetOne());
+        }
+
+        return $rules;
     }
 
     public static function getRules()
