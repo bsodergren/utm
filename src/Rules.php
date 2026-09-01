@@ -21,7 +21,7 @@ class Rules
 
     public static function getCsFixerRules($rule = 1)
     {
-        $rules = self::getHeaderRules();
+        $rules = array_merge(self::getHeaderRules(), self::getCommonRules());
 
         switch ($rule) {
             case 1:
